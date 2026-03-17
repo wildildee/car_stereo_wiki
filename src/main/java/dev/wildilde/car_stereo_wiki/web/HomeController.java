@@ -17,6 +17,6 @@ public class HomeController {
     @GetMapping("/")
     String home(Model model) {
         model.addAttribute("carStereos", carStereoRepository.findAll());
-        return "home";
+        return "page/home";
     }
 }

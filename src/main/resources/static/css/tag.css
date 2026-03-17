@@ -1,0 +1,13 @@
+.tagHolder {
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+}
+
+.tag {
+    padding: 0 1em;
+    background-color: darkblue;
+    color: white;
+    border-radius: 0.5em;
+    cursor: pointer;
+}

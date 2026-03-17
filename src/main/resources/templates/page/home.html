@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{template :: head('Car Stereo Wiki')}">
+    <title>Car Stereo Wiki</title>
+</head>
+<body>
+    <header th:replace="~{template :: header('Welcome to Car Stereo Wiki')}"></header>
+    <div class="container">
+        <table th:if="${carStereos != null and !carStereos.isEmpty()}">
+            <thead>
+                <tr>
+                    <th>Brands</th>
+                    <th>Name</th>
+                    <th>Year</th>
+                    <th>Size</th>
+                    <th>Display</th>
+                    <th>Inputs</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="carStereo : ${carStereos}">
+                    <td class="tagHolder">
+                        <th:block th:each="brand : ${carStereo.brands}">
+                            <div th:replace="~{fragment/tag :: tag(${brand})}"></div>
+                        </th:block>
+                    </td>
+                    <td th:text="${carStereo.name}"></td>
+                    <td th:text="${carStereo.year}"></td>
+                    <td th:insert="~{fragment/tag :: tag(${carStereo.size})}"></td>
+                    <td class="tagHolder">
+                        <th:block th:each="display : ${carStereo.displays}">
+                            <div th:replace="~{fragment/tag :: tag(${display})}"></div>
+                        </th:block>
+                    </td>
+                    <td class="tagHolder">
+                        <th:block th:each="input : ${carStereo.inputs}">
+                            <div th:replace="~{fragment/tag :: tag(${input})}"></div>
+                        </th:block>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p th:if="${carStereos == null or carStereos.isEmpty()}">
+            No car stereos found.
+        </p>
+    </div>
+    <footer th:replace="~{template :: footer}"></footer>
+</body>
+</html>

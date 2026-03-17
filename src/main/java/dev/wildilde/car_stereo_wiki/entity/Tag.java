@@ -10,14 +10,11 @@ public class Tag {
     @Id
     private long id;
     private String name;
+    private String type;
     private String description;
+    private String color;
 
     public Tag() {
-    }
-    public Tag(long id, String name, String description) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
     }
 
     public long getId() {
@@ -36,11 +33,27 @@ public class Tag {
         this.name = name;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 }

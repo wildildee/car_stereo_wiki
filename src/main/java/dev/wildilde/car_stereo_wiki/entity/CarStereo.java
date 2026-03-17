@@ -18,6 +18,12 @@ public class CarStereo {
     private Set<Tag> brands;
     @OneToOne
     private Tag size;
+    @OneToMany
+    @JoinTable(name = "car_stereo_display_tag")
+    private Set<Tag> displays;
+    @OneToMany
+    @JoinTable(name = "car_stereo_input_tag")
+    private Set<Tag> inputs;
 
     public long getId() {
         return id;
@@ -65,5 +71,21 @@ public class CarStereo {
 
     public void setSize(Tag size) {
         this.size = size;
+    }
+
+    public Set<Tag> getInputs() {
+        return inputs;
+    }
+
+    public void setInputs(Set<Tag> inputs) {
+        this.inputs = inputs;
+    }
+
+    public Set<Tag> getDisplays() {
+        return displays;
+    }
+
+    public void setDisplays(Set<Tag> displays) {
+        this.displays = displays;
     }
 }

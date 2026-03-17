@@ -1,0 +1,15 @@
+<!-- templates/fragment/tag.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<body>
+<!--/*@thymesVar id="tag" type="dev.wildilde.car_stereo_wiki.entity.Tag"*/-->
+    <div th:fragment="tag(tag)"
+     th:style="${tag.color != null ? 'background-color:' + tag.color : ''}"
+     class="tag">
+        <a th:href="@{/tag/{id}(id=${tag.id})}"
+           th:title="${tag.description}"
+           th:text="${tag.name}"></a>
+    <div th:if="${tag == null}">NULL</div>
+</div>
+</body>
+</html>
