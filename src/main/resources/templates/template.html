@@ -13,8 +13,8 @@
     <link rel="stylesheet" href="/css/template.css" />
 </head>
 <body>
-    <header th:fragment="header(pageHeader)">
-        <div th:replace="~{fragment/header :: header(${pageHeader})}"></div>
+    <header th:fragment="header">
+        <div th:replace="~{fragment/header :: header}"></div>
     </header>
 
     <footer th:fragment="footer">

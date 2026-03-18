@@ -1,15 +1,25 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <body>
-  <!--/*@thymesVar id="pageHeader" type="java.lang.String"*/-->
-  <nav class="navbar is-dark" role="navigation" aria-label="main navigation" th:fragment="header(pageHeader)">
+  <nav class="navbar is-dark" role="navigation" aria-label="main navigation" th:fragment="header">
+
       <div class="navbar-brand">
+          <!-- Left side logo + website name-->
           <a class="navbar-item" href="/">
-              <strong th:text="${pageHeader}">Car Stereo Wiki</strong>
+              <strong>Car Stereo Wiki</strong>
+          </a>
+
+          <!-- Burger menu (mobile only) -->
+          <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
           </a>
       </div>
 
-      <div id="navbarBasicExample" class="navbar-menu">
+      <div class="navbar-menu" id="navbarMenu">
+          <!-- Left side search bar (desktop only) -->
           <div class="navbar-start">
               <div class="navbar-item">
                   <form action="/search" method="get">
@@ -26,6 +36,7 @@
                   </form>
               </div>
           </div>
+          <!-- Right side login/logout buttons (desktop only)-->
           <div class="navbar-end">
               <div class="navbar-item">
                   <div class="header-buttons loggedout">
