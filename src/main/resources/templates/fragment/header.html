@@ -10,14 +10,30 @@
       </div>
 
       <div id="navbarBasicExample" class="navbar-menu">
+          <div class="navbar-start">
+              <div class="navbar-item">
+                  <form action="/search" method="get">
+                      <div class="field has-addons">
+                          <div class="control">
+                              <input class="input" type="text" name="query" placeholder="Search by name..." th:value="${query}">
+                          </div>
+                          <div class="control">
+                              <button type="submit" class="button is-info">
+                                  Search
+                              </button>
+                          </div>
+                      </div>
+                  </form>
+              </div>
+          </div>
           <div class="navbar-end">
               <div class="navbar-item">
-                  <div class="buttons loggedout">
+                  <div class="header-buttons loggedout">
                       <a class="button is-light" href="/oauth2/authorization/github">
                           Log in
                       </a>
                   </div>
-                  <div class="buttons loggedin">
+                  <div class="header-buttons loggedin">
                       <a class="button is-light">
                           <span id="username"></span>
                       </a>

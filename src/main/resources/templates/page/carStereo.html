@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{template :: head(${carStereo.name} + ' - Car Stereo Wiki')}">
+    <title th:text="${carStereo.name} + ' - Car Stereo Wiki'">Car Stereo Details</title>
+</head>
+<body>
+    <header th:replace="~{template :: header(${carStereo.name})}"></header>
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-one-third" th:if="${carStereo.image != null}">
+                    <figure class="image">
+                        <img th:src="${carStereo.image}" th:alt="${carStereo.name}">
+                    </figure>
+                </div>
+                <div class="column">
+                    <div class="box">
+                        <h1 class="title" th:text="${carStereo.name}"></h1>
+                        <h2 class="subtitle" th:text="'Year: ' + ${carStereo.year}"></h2>
+                        
+                        <div class="content">
+                            <h3 class="is-size-5">Description</h3>
+                            <p th:text="${carStereo.description}"></p>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Brands</label>
+                            <div th:replace="~{fragment/tagBox :: tagBox(${carStereo.brands})}"></div>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Sizes</label>
+                            <div th:replace="~{fragment/tagBox :: tagBox(${carStereo.sizes})}"></div>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Displays</label>
+                            <div th:replace="~{fragment/tagBox :: tagBox(${carStereo.displays})}"></div>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Inputs</label>
+                            <div th:replace="~{fragment/tagBox :: tagBox(${carStereo.inputs})}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer th:replace="~{template :: footer}"></footer>
+</body>
+</html>

@@ -21,10 +21,11 @@ public class HomeController {
     }
 
     @GetMapping("/")
-    String home(Model model, @RequestParam(defaultValue = "0") int page) {
+    String home(Model model, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "") String query) {
         // Get all car stereos
         Page<CarStereo> stereos = carStereoRepository.findAll(PageRequest.of(page, PAGE_SIZE));
         model.addAttribute("pagedCarStereos",stereos);
+        model.addAttribute("query", query);
         return "page/home";
     }
 }

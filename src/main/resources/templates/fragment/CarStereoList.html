@@ -20,7 +20,9 @@
                     <td>
                         <div th:replace="~{fragment/tagBox :: tagBox(${carStereo.brands})}"></div>
                     </td>
-                    <td th:text="${carStereo.name}"></td>
+                    <td>
+                        <a th:href="@{/carStereo/{name}(name=${carStereo.name})}" th:text="${carStereo.name}"></a>
+                    </td>
                     <td th:text="${carStereo.year}"></td>
                     <td>
                         <div th:replace="~{fragment/tagBox :: tagBox(${carStereo.sizes})}"></div>

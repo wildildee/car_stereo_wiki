@@ -6,13 +6,20 @@ import java.util.List;
 
 @Entity
 public class CarStereo {
+
+    private static final int MAX_DESCRIPTION_LENGTH = 4000;
+
     @GeneratedValue()
     @Id
     private long id;
-    private String name;
 
+    @Column(unique = true)
+    private String name;
     private int year;
     private String image;
+    @Column(length = MAX_DESCRIPTION_LENGTH)
+    private String description;
+
     @ManyToMany
     @JoinTable(name = "car_stereo_brand_tag")
     private List<Tag> brands;
@@ -88,5 +95,13 @@ public class CarStereo {
 
     public void setSizes(List<Tag> sizes) {
         this.sizes = sizes;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -32,4 +32,6 @@ public interface CarStereoRepository extends PagingAndSortingRepository<CarStere
                            @Param("display") String display,
                            @Param("input") String input,
                            Pageable pageable);
+
+    CarStereo findCarStereoByName(String name);
 }
