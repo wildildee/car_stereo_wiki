@@ -2,15 +2,32 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <body>
   <!--/*@thymesVar id="pageHeader" type="java.lang.String"*/-->
-  <header th:fragment="header(pageHeader)">
-      <h1 th:text="${pageHeader}">Car Stereo Wiki</h1>
-      <div class="loggedout">
-          <button>Login</button>
-          <button>Register</button>
+  <nav class="navbar is-dark" role="navigation" aria-label="main navigation" th:fragment="header(pageHeader)">
+      <div class="navbar-brand">
+          <a class="navbar-item" href="/">
+              <strong th:text="${pageHeader}">Car Stereo Wiki</strong>
+          </a>
       </div>
-      <div class="loggedin">
-          <button><span id="username"></span></button>
+
+      <div id="navbarBasicExample" class="navbar-menu">
+          <div class="navbar-end">
+              <div class="navbar-item">
+                  <div class="buttons loggedout">
+                      <a class="button is-light" href="/oauth2/authorization/github">
+                          Log in
+                      </a>
+                  </div>
+                  <div class="buttons loggedin">
+                      <a class="button is-light">
+                          <span id="username"></span>
+                      </a>
+                      <a class="button is-danger" id="logout">
+                          Log Out
+                      </a>
+                  </div>
+              </div>
+          </div>
       </div>
-  </header>
+  </nav>
 </body>
 </html>

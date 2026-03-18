@@ -1,0 +1,18 @@
+<!-- templates/fragment/tagBox.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<body>
+<!--/*@thymesVar id="tag" type="dev.wildilde.car_stereo_wiki.entity.Tag"*/-->
+    <div th:fragment="tagBox(tags)"
+     class="tagHolder">
+        <span
+                th:style="${tag.color != null ? 'background-color:' + tag.color + ' !important' : ''}"
+                th:each="tag : ${tags}"
+                class="tag is-primary has-tooltip-multiline"
+                th:data-tooltip="${tag.description}">
+            <a th:href="@{/search(${tag.type}=${tag.name})}"
+               th:text="${tag.name}"></a>
+        </span>
+    </div>
+</body>
+</html>

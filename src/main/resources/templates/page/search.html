@@ -5,8 +5,11 @@
 </head>
 <body>
     <header th:replace="~{template :: header('Search Results')}"></header>
-    <div class="container">
-        <div th:replace="~{fragment/CarStereoList :: carStereoList(${pagedCarStereos})}"></div>
-    </div>
+    <section class="section">
+        <div class="container">
+            <div th:replace="~{fragment/CarStereoList :: carStereoList(${pagedCarStereos})}"></div>
+        </div>
+    </section>
+    <footer th:replace="~{template :: footer}"></footer>
 </body>
 </html>

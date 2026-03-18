@@ -5,18 +5,20 @@
     <title th:text="${pageTitle}">Car Stereo Wiki</title>
 
     <script src="https://code.jquery.com/jquery-4.0.0.js" integrity="sha256-9fsHeVnKBvqh3FB2HYu7g2xseAZ5MlN6Kz/qnkASV8U=" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" integrity="sha512-EZLkOqwILORob+p0BXZc+Vm3RgJBOe1Iq/0fiI7r/wJgzOFZMlsqTa29UEl6v6U6gsV4uIpsNZoV32YZqrCRCQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@creativebulma/bulma-tooltip@1.2.0/dist/bulma-tooltip.min.css">
 
     <script src="/js/auth.js"></script>
     <link rel="stylesheet" href="/css/tag.css" />
+    <link rel="stylesheet" href="/css/template.css" />
 </head>
 <body>
     <header th:fragment="header(pageHeader)">
-        <h1 th:text="${pageHeader}">Car Stereo Wiki</h1>
+        <div th:replace="~{fragment/header :: header(${pageHeader})}"></div>
     </header>
 
     <footer th:fragment="footer">
-        <small>&copy; Car Stereo Wiki</small>
+        <div th:replace="~{fragment/footer :: footer}"></div>
     </footer>
 </body>
 </html>

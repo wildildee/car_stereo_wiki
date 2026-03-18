@@ -4,7 +4,7 @@
     <body>
         <!--/*@thymesVar id="pagedCarStereos" type="org.springframework.data.domain.Page<dev.wildilde.car_stereo_wiki.entity.CarStereo>"*/-->
         <div th:fragment="carStereoList(pagedCarStereos)">
-            <table>
+            <table class="table is-fullwidth is-striped">
                 <thead>
                 <tr>
                     <th>Brands</th>
@@ -16,51 +16,38 @@
                 </tr>
                 </thead>
                 <tbody>
-
                 <tr th:each="carStereo : ${pagedCarStereos}">
-                    <td class="tagHolder">
-                        <th:block th:each="brand : ${carStereo.brands}">
-                            <div th:replace="~{fragment/tag :: tag(${brand})}"></div>
-                        </th:block>
+                    <td>
+                        <div th:replace="~{fragment/tagBox :: tagBox(${carStereo.brands})}"></div>
                     </td>
                     <td th:text="${carStereo.name}"></td>
                     <td th:text="${carStereo.year}"></td>
-                    <td class="tagHolder">
-                        <th:block th:each="size : ${carStereo.sizes}">
-                            <div th:replace="~{fragment/tag :: tag(${size})}"></div>
-                        </th:block>
+                    <td>
+                        <div th:replace="~{fragment/tagBox :: tagBox(${carStereo.sizes})}"></div>
                     </td>
-                    <td class="tagHolder">
-                        <th:block th:each="display : ${carStereo.displays}">
-                            <div th:replace="~{fragment/tag :: tag(${display})}"></div>
-                        </th:block>
+                    <td>
+                        <div th:replace="~{fragment/tagBox :: tagBox(${carStereo.displays})}"></div>
                     </td>
-                    <td class="tagHolder">
-                        <th:block th:each="input : ${carStereo.inputs}">
-                            <div th:replace="~{fragment/tag :: tag(${input})}"></div>
-                        </th:block>
+                    <td>
+                        <div th:replace="~{fragment/tagBox :: tagBox(${carStereo.inputs})}"></div>
                     </td>
                 </tr>
                 </tbody>
             </table>
 
-            <p th:if="${pagedCarStereos == null or pagedCarStereos.isEmpty()}">
+            <p class="notification" th:if="${pagedCarStereos == null or pagedCarStereos.isEmpty()}">
                 No car stereos found.
             </p>
 
-            <nav th:if="${pagedCarStereos != null}">
-                <ul class="pagination">
-                    <li th:classappend="${pagedCarStereos.first} ? 'disabled'">
-                        <a th:href="@{/(page=${pagedCarStereos.number - 1})}">&laquo;</a>
-                    </li>
-
-                    <li th:each="i : ${#numbers.sequence(0, pagedCarStereos.totalPages - 1)}"
-                        th:classappend="${i == pagedCarStereos.number} ? 'active'">
-                        <a th:href="@{/(page=${i})}" th:text="${i + 1}"></a>
-                    </li>
-
-                    <li th:classappend="${pagedCarStereos.last} ? 'disabled'">
-                        <a th:href="@{/(page=${pagedCarStereos.number + 1})}">&raquo;</a>
+            <nav class="pagination is-centered" role="navigation" aria-label="pagination" th:if="${pagedCarStereos != null}">
+                <a class="pagination-previous" th:href="@{/(page=${pagedCarStereos.number - 1})}" th:disabled="${pagedCarStereos.first}">&laquo; Previous</a>
+                <a class="pagination-next" th:href="@{/(page=${pagedCarStereos.number + 1})}" th:disabled="${pagedCarStereos.last}">Next &raquo;</a>
+                <ul class="pagination-list">
+                    <li th:each="i : ${#numbers.sequence(0, pagedCarStereos.totalPages - 1)}">
+                        <a class="pagination-link"
+                           th:classappend="${i == pagedCarStereos.number} ? 'is-current'"
+                           th:href="@{/(page=${i})}" th:text="${i + 1}"
+                           th:aria-label="'Goto page ' + ${i + 1}"></a>
                     </li>
                 </ul>
             </nav>

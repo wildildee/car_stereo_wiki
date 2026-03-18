@@ -12,6 +12,9 @@ import java.util.Map;
 public class User {
     @GetMapping("/api/user")
     public Map<String, Object> user(@AuthenticationPrincipal OAuth2User principal) {
+        if (principal == null) {
+            return Collections.emptyMap();
+        }
         return Collections.singletonMap("name", principal.getAttribute("login"));
     }
 }

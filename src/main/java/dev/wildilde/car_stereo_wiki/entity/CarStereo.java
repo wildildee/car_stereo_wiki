@@ -2,7 +2,7 @@ package dev.wildilde.car_stereo_wiki.entity;
 
 import jakarta.persistence.*;
 
-import java.util.Set;
+import java.util.List;
 
 @Entity
 public class CarStereo {
@@ -15,16 +15,16 @@ public class CarStereo {
     private String image;
     @ManyToMany
     @JoinTable(name = "car_stereo_brand_tag")
-    private Set<Tag> brands;
+    private List<Tag> brands;
     @ManyToMany
     @JoinTable(name = "car_stereo_size_tag")
-    private Set<Tag> sizes;
+    private List<Tag> sizes;
     @ManyToMany
     @JoinTable(name = "car_stereo_display_tag")
-    private Set<Tag> displays;
+    private List<Tag> displays;
     @ManyToMany
     @JoinTable(name = "car_stereo_input_tag")
-    private Set<Tag> inputs;
+    private List<Tag> inputs;
 
     public long getId() {
         return id;
@@ -58,35 +58,35 @@ public class CarStereo {
         this.image = image;
     }
 
-    public Set<Tag> getBrands() {
+    public List<Tag> getBrands() {
         return brands;
     }
 
-    public void setBrands(Set<Tag> brands) {
+    public void setBrands(List<Tag> brands) {
         this.brands = brands;
     }
 
-    public Set<Tag> getInputs() {
+    public List<Tag> getInputs() {
         return inputs;
     }
 
-    public void setInputs(Set<Tag> inputs) {
+    public void setInputs(List<Tag> inputs) {
         this.inputs = inputs;
     }
 
-    public Set<Tag> getDisplays() {
+    public List<Tag> getDisplays() {
         return displays;
     }
 
-    public void setDisplays(Set<Tag> displays) {
+    public void setDisplays(List<Tag> displays) {
         this.displays = displays;
     }
 
-    public Set<Tag> getSizes() {
+    public List<Tag> getSizes() {
         return sizes;
     }
 
-    public void setSizes(Set<Tag> sizes) {
+    public void setSizes(List<Tag> sizes) {
         this.sizes = sizes;
     }
 }
