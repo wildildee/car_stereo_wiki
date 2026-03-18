@@ -3,32 +3,24 @@ $(() => {
     $.get("/api/user", (data) => {
         if (data && data.name) {
             $("#username").text(data.name);
-            $(".loggedout").hide();
-            $(".loggedin").show();
-        } else {
-            $(".loggedout").show();
-            $(".loggedin").hide();
+            $(".loggedout").addClass("is-hidden");
+            $(".loggedin").removeClass("is-hidden");
         }
     });
 
     // Add logout button
     $("#logout").on("click", (e) => {
         e.preventDefault();
-        const csrfToken = document.cookie
-            .split("; ")
-            .find(row => row.startsWith("XSRF-TOKEN="))
-            ?.split("=")[1];
+        const csrfToken = $("meta[name='_csrf']").attr("content");
+        const csrfHeader = $("meta[name='_csrf_header']").attr("content");
 
         $.ajax({
             url: "/logout",
             type: "POST",
-            headers: {
-                "X-XSRF-TOKEN": csrfToken
+            beforeSend: (xhr) => {
+                xhr.setRequestHeader(csrfHeader, csrfToken);
             },
             success: () => {
-                $("#username").text("");
-                $(".loggedout").show();
-                $(".loggedin").hide();
                 window.location.href = "/";
             }
         });
