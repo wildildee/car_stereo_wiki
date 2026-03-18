@@ -57,7 +57,11 @@ public class CarStereoController {
     }
 
     @PostMapping("/carStereo/{name}/edit")
-    String saveCarStereo(@PathVariable String name, @ModelAttribute CarStereo carStereo) {
+    String saveCarStereo(@PathVariable String name, @ModelAttribute CarStereo carStereo,
+                         @RequestParam(value = "brands", required = false) List<Long> brandIds,
+                         @RequestParam(value = "sizes", required = false) List<Long> sizeIds,
+                         @RequestParam(value = "displays", required = false) List<Long> displayIds,
+                         @RequestParam(value = "inputs", required = false) List<Long> inputIds) {
         CarStereo existing = carStereoRepository.findCarStereoByName(name);
         if(existing == null) {
             return "redirect:/";
@@ -68,13 +72,29 @@ public class CarStereoController {
         existing.setImage(carStereo.getImage());
         existing.setDescription(carStereo.getDescription());
         
-        // Use clear and addAll for tag lists if they are managed by JPA to avoid detached entity issues
-        // or just re-set if JPA handles it well. 
-        // For simplicity and common Spring Boot behavior with @ManyToMany:
-        existing.setBrands(carStereo.getBrands());
-        existing.setSizes(carStereo.getSizes());
-        existing.setDisplays(carStereo.getDisplays());
-        existing.setInputs(carStereo.getInputs());
+        if (brandIds != null) {
+            existing.setBrands(tagRepository.findAllById(brandIds));
+        } else {
+            existing.setBrands(List.of());
+        }
+
+        if (sizeIds != null) {
+            existing.setSizes(tagRepository.findAllById(sizeIds));
+        } else {
+            existing.setSizes(List.of());
+        }
+
+        if (displayIds != null) {
+            existing.setDisplays(tagRepository.findAllById(displayIds));
+        } else {
+            existing.setDisplays(List.of());
+        }
+
+        if (inputIds != null) {
+            existing.setInputs(tagRepository.findAllById(inputIds));
+        } else {
+            existing.setInputs(List.of());
+        }
         
         carStereoRepository.save(existing);
         return "redirect:/carStereo/" + existing.getName();
@@ -91,7 +111,23 @@ public class CarStereoController {
     }
 
     @PostMapping("/carStereo/add")
-    String createCarStereo(@ModelAttribute CarStereo carStereo) {
+    String createCarStereo(@ModelAttribute CarStereo carStereo,
+                           @RequestParam(value = "brands", required = false) List<Long> brandIds,
+                           @RequestParam(value = "sizes", required = false) List<Long> sizeIds,
+                           @RequestParam(value = "displays", required = false) List<Long> displayIds,
+                           @RequestParam(value = "inputs", required = false) List<Long> inputIds) {
+        if (brandIds != null) {
+            carStereo.setBrands(tagRepository.findAllById(brandIds));
+        }
+        if (sizeIds != null) {
+            carStereo.setSizes(tagRepository.findAllById(sizeIds));
+        }
+        if (displayIds != null) {
+            carStereo.setDisplays(tagRepository.findAllById(displayIds));
+        }
+        if (inputIds != null) {
+            carStereo.setInputs(tagRepository.findAllById(inputIds));
+        }
         carStereoRepository.save(carStereo);
         return "redirect:/carStereo/" + carStereo.getName();
     }

@@ -37,51 +37,83 @@
                 </div>
             </div>
 
-            <div class="columns">
-                <div class="column">
+            <div class="columns is-multiline">
+                <div class="column is-one-quarter">
                     <div class="field">
                         <label class="label">Brands</label>
                         <div class="control">
-                            <div class="select is-multiple is-fullwidth">
-                                <select th:field="*{brands}" multiple size="5">
-                                    <option th:each="tag : ${allBrands}" th:value="${tag.id}" th:text="${tag.name}"></option>
-                                </select>
+                            <div class="field is-grouped is-grouped-multiline">
+                                <div class="control" th:each="tag : ${allBrands}">
+                                    <div class="tags has-addons">
+                                        <label class="tag" th:for="${'brand-' + tag.id}"
+                                               th:style="${tag.color != null ? 'background-color:' + tag.color + ' !important; color: white; cursor: pointer;' : 'cursor: pointer;'}"
+                                               th:text="${tag.name}">Brand</label>
+                                        <div class="tag">
+                                            <input type="checkbox" name="brands" th:id="${'brand-' + tag.id}" th:value="${tag.id}" 
+                                                   th:checked="${carStereo.brands != null && carStereo.brands.contains(tag)}">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="column">
+                <div class="column is-one-quarter">
                     <div class="field">
                         <label class="label">Sizes</label>
                         <div class="control">
-                            <div class="select is-multiple is-fullwidth">
-                                <select th:field="*{sizes}" multiple size="5">
-                                    <option th:each="tag : ${allSizes}" th:value="${tag.id}" th:text="${tag.name}"></option>
-                                </select>
+                            <div class="field is-grouped is-grouped-multiline">
+                                <div class="control" th:each="tag : ${allSizes}">
+                                    <div class="tags has-addons">
+                                        <label class="tag" th:for="${'size-' + tag.id}"
+                                               th:style="${tag.color != null ? 'background-color:' + tag.color + ' !important; color: white; cursor: pointer;' : 'cursor: pointer;'}"
+                                               th:text="${tag.name}">Size</label>
+                                        <div class="tag">
+                                            <input type="checkbox" name="sizes" th:id="${'size-' + tag.id}" th:value="${tag.id}"
+                                                   th:checked="${carStereo.sizes != null && carStereo.sizes.contains(tag)}">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="column">
+                <div class="column is-one-quarter">
                     <div class="field">
                         <label class="label">Displays</label>
                         <div class="control">
-                            <div class="select is-multiple is-fullwidth">
-                                <select th:field="*{displays}" multiple size="5">
-                                    <option th:each="tag : ${allDisplays}" th:value="${tag.id}" th:text="${tag.name}"></option>
-                                </select>
+                            <div class="field is-grouped is-grouped-multiline">
+                                <div class="control" th:each="tag : ${allDisplays}">
+                                    <div class="tags has-addons">
+                                        <label class="tag" th:for="${'display-' + tag.id}"
+                                               th:style="${tag.color != null ? 'background-color:' + tag.color + ' !important; color: white; cursor: pointer;' : 'cursor: pointer;'}"
+                                               th:text="${tag.name}">Display</label>
+                                        <div class="tag">
+                                            <input type="checkbox" name="displays" th:id="${'display-' + tag.id}" th:value="${tag.id}"
+                                                   th:checked="${carStereo.displays != null && carStereo.displays.contains(tag)}">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="column">
+                <div class="column is-one-quarter">
                     <div class="field">
                         <label class="label">Inputs</label>
                         <div class="control">
-                            <div class="select is-multiple is-fullwidth">
-                                <select th:field="*{inputs}" multiple size="5">
-                                    <option th:each="tag : ${allInputs}" th:value="${tag.id}" th:text="${tag.name}"></option>
-                                </select>
+                            <div class="field is-grouped is-grouped-multiline">
+                                <div class="control" th:each="tag : ${allInputs}">
+                                    <div class="tags has-addons">
+                                        <label class="tag" th:for="${'input-' + tag.id}"
+                                               th:style="${tag.color != null ? 'background-color:' + tag.color + ' !important; color: white; cursor: pointer;' : 'cursor: pointer;'}"
+                                               th:text="${tag.name}">Input</label>
+                                        <div class="tag">
+                                            <input type="checkbox" name="inputs" th:id="${'input-' + tag.id}" th:value="${tag.id}"
+                                                   th:checked="${carStereo.inputs != null && carStereo.inputs.contains(tag)}">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
