@@ -12,3 +12,7 @@ body {
     gap: 0.75rem;
     margin-bottom: 0;
 }
+
+.navbar-end .navbar-item {
+    gap: 0.75rem;
+}

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -75,25 +76,25 @@ public class CarStereoController {
         if (brandIds != null) {
             existing.setBrands(tagRepository.findAllById(brandIds));
         } else {
-            existing.setBrands(List.of());
+            existing.setBrands(new ArrayList<>());
         }
 
         if (sizeIds != null) {
             existing.setSizes(tagRepository.findAllById(sizeIds));
         } else {
-            existing.setSizes(List.of());
+            existing.setSizes(new ArrayList<>());
         }
 
         if (displayIds != null) {
             existing.setDisplays(tagRepository.findAllById(displayIds));
         } else {
-            existing.setDisplays(List.of());
+            existing.setDisplays(new ArrayList<>());
         }
 
         if (inputIds != null) {
             existing.setInputs(tagRepository.findAllById(inputIds));
         } else {
-            existing.setInputs(List.of());
+            existing.setInputs(new ArrayList<>());
         }
         
         carStereoRepository.save(existing);
@@ -118,15 +119,23 @@ public class CarStereoController {
                            @RequestParam(value = "inputs", required = false) List<Long> inputIds) {
         if (brandIds != null) {
             carStereo.setBrands(tagRepository.findAllById(brandIds));
+        } else {
+            carStereo.setBrands(new ArrayList<>());
         }
         if (sizeIds != null) {
             carStereo.setSizes(tagRepository.findAllById(sizeIds));
+        } else {
+            carStereo.setSizes(new ArrayList<>());
         }
         if (displayIds != null) {
             carStereo.setDisplays(tagRepository.findAllById(displayIds));
+        } else {
+            carStereo.setDisplays(new ArrayList<>());
         }
         if (inputIds != null) {
             carStereo.setInputs(tagRepository.findAllById(inputIds));
+        } else {
+            carStereo.setInputs(new ArrayList<>());
         }
         carStereoRepository.save(carStereo);
         return "redirect:/carStereo/" + carStereo.getName();

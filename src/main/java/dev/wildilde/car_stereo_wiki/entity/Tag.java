@@ -6,7 +6,7 @@ import jakarta.persistence.Id;
 
 @Entity
 public class Tag {
-    @GeneratedValue()
+    @GeneratedValue
     @Id
     private long id;
     private String name;

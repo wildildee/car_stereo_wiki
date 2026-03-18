@@ -29,7 +29,7 @@ public class SecurityConfig {
         return http
                 .authorizeHttpRequests(a -> a
                         .requestMatchers("/", "/error", "/css/**", "/js/**", "/carStereo/{name}", "/api/user", "/search").permitAll()
-                        .requestMatchers("/carStereo/add", "/carStereo/*/edit").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/carStereo/add", "/carStereo/*/edit", "/api/tag/add").hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated()
                 )
                 .logout(l -> l.

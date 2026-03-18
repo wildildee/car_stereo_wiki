@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{template :: head('Add New Tag - Car Stereo Wiki')}">
+    <title>Add New Tag - Car Stereo Wiki</title>
+</head>
+<body>
+<header th:replace="~{template :: header}"></header>
+<section class="section">
+    <div class="container">
+        <h1 class="title">Add New Tag</h1>
+        <form id="addTagForm">
+            <div class="field">
+                <label class="label">Name</label>
+                <div class="control">
+                    <input class="input" type="text" id="name" required placeholder="Tag Name">
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Type</label>
+                <div class="control">
+                    <div class="select">
+                        <select id="type" required>
+                            <option value="brand">Brand</option>
+                            <option value="size">Size</option>
+                            <option value="display">Display</option>
+                            <option value="input">Input</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Color (Hex, e.g. #3273dc)</label>
+                <div class="control">
+                    <input class="input" type="text" id="color" placeholder="#000000">
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Description</label>
+                <div class="control">
+                    <textarea class="textarea" id="description" rows="5" placeholder="Tag description..."></textarea>
+                </div>
+            </div>
+
+            <div class="field is-grouped">
+                <div class="control">
+                    <button class="button is-link" type="submit">Add Tag</button>
+                </div>
+                <div class="control">
+                    <a class="button is-link is-light" href="/">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+<footer th:replace="~{template :: footer}"></footer>
+
+<script src="/js/tagAdd.js"></script>
+</body>
+</html>

@@ -5,6 +5,9 @@ $(() => {
             $("#username").text(data.name);
             $(".loggedout").addClass("is-hidden");
             $(".loggedin").removeClass("is-hidden");
+            if (data.admin) {
+                $(".admin-only").removeClass("is-hidden");
+            }
         }
     });
 

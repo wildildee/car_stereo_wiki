@@ -9,7 +9,7 @@ public class CarStereo {
 
     private static final int MAX_DESCRIPTION_LENGTH = 4000;
 
-    @GeneratedValue()
+    @GeneratedValue
     @Id
     private long id;
 
