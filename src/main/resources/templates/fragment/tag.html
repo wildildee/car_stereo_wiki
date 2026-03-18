@@ -6,7 +6,7 @@
     <div th:fragment="tag(tag)"
      th:style="${tag.color != null ? 'background-color:' + tag.color : ''}"
      class="tag">
-        <a th:href="@{/tag/{id}(id=${tag.id})}"
+        <a th:href="@{/search(type=${tag.type}, name=${tag.name})}"
            th:title="${tag.description}"
            th:text="${tag.name}"></a>
     <div th:if="${tag == null}">NULL</div>

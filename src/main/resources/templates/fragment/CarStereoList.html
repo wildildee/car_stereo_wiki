@@ -1,0 +1,69 @@
+<!-- templates/fragment/CarStereoList.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+    <body>
+        <!--/*@thymesVar id="pagedCarStereos" type="org.springframework.data.domain.Page<dev.wildilde.car_stereo_wiki.entity.CarStereo>"*/-->
+        <div th:fragment="carStereoList(pagedCarStereos)">
+            <table>
+                <thead>
+                <tr>
+                    <th>Brands</th>
+                    <th>Name</th>
+                    <th>Year</th>
+                    <th>Size</th>
+                    <th>Display</th>
+                    <th>Inputs</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <tr th:each="carStereo : ${pagedCarStereos}">
+                    <td class="tagHolder">
+                        <th:block th:each="brand : ${carStereo.brands}">
+                            <div th:replace="~{fragment/tag :: tag(${brand})}"></div>
+                        </th:block>
+                    </td>
+                    <td th:text="${carStereo.name}"></td>
+                    <td th:text="${carStereo.year}"></td>
+                    <td class="tagHolder">
+                        <th:block th:each="size : ${carStereo.sizes}">
+                            <div th:replace="~{fragment/tag :: tag(${size})}"></div>
+                        </th:block>
+                    </td>
+                    <td class="tagHolder">
+                        <th:block th:each="display : ${carStereo.displays}">
+                            <div th:replace="~{fragment/tag :: tag(${display})}"></div>
+                        </th:block>
+                    </td>
+                    <td class="tagHolder">
+                        <th:block th:each="input : ${carStereo.inputs}">
+                            <div th:replace="~{fragment/tag :: tag(${input})}"></div>
+                        </th:block>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <p th:if="${pagedCarStereos == null or pagedCarStereos.isEmpty()}">
+                No car stereos found.
+            </p>
+
+            <nav th:if="${pagedCarStereos != null}">
+                <ul class="pagination">
+                    <li th:classappend="${pagedCarStereos.first} ? 'disabled'">
+                        <a th:href="@{/(page=${pagedCarStereos.number - 1})}">&laquo;</a>
+                    </li>
+
+                    <li th:each="i : ${#numbers.sequence(0, pagedCarStereos.totalPages - 1)}"
+                        th:classappend="${i == pagedCarStereos.number} ? 'active'">
+                        <a th:href="@{/(page=${i})}" th:text="${i + 1}"></a>
+                    </li>
+
+                    <li th:classappend="${pagedCarStereos.last} ? 'disabled'">
+                        <a th:href="@{/(page=${pagedCarStereos.number + 1})}">&raquo;</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </body>
+</html>

@@ -13,15 +13,16 @@ public class CarStereo {
 
     private int year;
     private String image;
-    @OneToMany
+    @ManyToMany
     @JoinTable(name = "car_stereo_brand_tag")
     private Set<Tag> brands;
-    @OneToOne
-    private Tag size;
-    @OneToMany
+    @ManyToMany
+    @JoinTable(name = "car_stereo_size_tag")
+    private Set<Tag> sizes;
+    @ManyToMany
     @JoinTable(name = "car_stereo_display_tag")
     private Set<Tag> displays;
-    @OneToMany
+    @ManyToMany
     @JoinTable(name = "car_stereo_input_tag")
     private Set<Tag> inputs;
 
@@ -65,14 +66,6 @@ public class CarStereo {
         this.brands = brands;
     }
 
-    public Tag getSize() {
-        return size;
-    }
-
-    public void setSize(Tag size) {
-        this.size = size;
-    }
-
     public Set<Tag> getInputs() {
         return inputs;
     }
@@ -87,5 +80,13 @@ public class CarStereo {
 
     public void setDisplays(Set<Tag> displays) {
         this.displays = displays;
+    }
+
+    public Set<Tag> getSizes() {
+        return sizes;
+    }
+
+    public void setSizes(Set<Tag> sizes) {
+        this.sizes = sizes;
     }
 }
