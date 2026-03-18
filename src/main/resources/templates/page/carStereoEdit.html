@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{template :: head(${carStereo.id == 0 ? 'Add New Car Stereo' : 'Edit ' + carStereo.name} + ' - Car Stereo Wiki')}">
+    <title th:text="${carStereo.id == 0 ? 'Add New Car Stereo' : 'Edit ' + carStereo.name} + ' - Car Stereo Wiki'">Edit Car Stereo</title>
+</head>
+<body>
+<header th:replace="~{template :: header}"></header>
+<section class="section">
+    <div class="container">
+        <h1 class="title" th:text="${carStereo.id == 0 ? 'Add New Car Stereo' : 'Edit Car Stereo'}">Edit Car Stereo</h1>
+        <form th:action="${carStereo.id == 0 ? '/carStereo/add' : '/carStereo/' + carStereo.name + '/edit'}" th:object="${carStereo}" method="post">
+            <div class="field">
+                <label class="label">Name</label>
+                <div class="control">
+                    <input class="input" type="text" th:field="*{name}" required>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Year</label>
+                <div class="control">
+                    <input class="input" type="number" th:field="*{year}" required>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Image URL</label>
+                <div class="control">
+                    <input class="input" type="text" th:field="*{image}">
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Description</label>
+                <div class="control">
+                    <textarea class="textarea" th:field="*{description}" rows="10"></textarea>
+                </div>
+            </div>
+
+            <div class="columns">
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Brands</label>
+                        <div class="control">
+                            <div class="select is-multiple is-fullwidth">
+                                <select th:field="*{brands}" multiple size="5">
+                                    <option th:each="tag : ${allBrands}" th:value="${tag.id}" th:text="${tag.name}"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Sizes</label>
+                        <div class="control">
+                            <div class="select is-multiple is-fullwidth">
+                                <select th:field="*{sizes}" multiple size="5">
+                                    <option th:each="tag : ${allSizes}" th:value="${tag.id}" th:text="${tag.name}"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Displays</label>
+                        <div class="control">
+                            <div class="select is-multiple is-fullwidth">
+                                <select th:field="*{displays}" multiple size="5">
+                                    <option th:each="tag : ${allDisplays}" th:value="${tag.id}" th:text="${tag.name}"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Inputs</label>
+                        <div class="control">
+                            <div class="select is-multiple is-fullwidth">
+                                <select th:field="*{inputs}" multiple size="5">
+                                    <option th:each="tag : ${allInputs}" th:value="${tag.id}" th:text="${tag.name}"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field is-grouped">
+                <div class="control">
+                    <button class="button is-link" type="submit" th:text="${carStereo.id == 0 ? 'Create' : 'Save Changes'}">Save Changes</button>
+                </div>
+                <div class="control">
+                    <a class="button is-link is-light" th:href="${carStereo.id == 0 ? '/' : '/carStereo/' + carStereo.name}">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+<footer th:replace="~{template :: footer}"></footer>
+</body>
+</html>

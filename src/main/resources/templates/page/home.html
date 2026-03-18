@@ -7,6 +7,14 @@
     <header th:replace="~{template :: header}"></header>
     <section class="section">
         <div class="container">
+            <div class="level">
+                <div class="level-left">
+                    <h1 class="title">Car Stereos</h1>
+                </div>
+                <div class="level-right">
+                    <a class="button is-primary is-small" th:href="@{/carStereo/add}" th:if="${isAdmin}">Add New Car Stereo</a>
+                </div>
+            </div>
             <div th:replace="~{fragment/CarStereoList :: carStereoList(${pagedCarStereos})}"></div>
         </div>
     </section>

@@ -4,6 +4,8 @@ import dev.wildilde.car_stereo_wiki.entity.CarStereo;
 import dev.wildilde.car_stereo_wiki.repository.CarStereoRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,14 +30,14 @@ public class SearchController {
                          @RequestParam(defaultValue = "") String year,
                          @RequestParam(defaultValue = "") String size,
                          @RequestParam(defaultValue = "") String display,
-                         @RequestParam(defaultValue = "") String input) {
+                         @RequestParam(defaultValue = "") String input,
+                         Authentication authentication) {
 
         Integer yearValue = year.isBlank() ? null : Integer.valueOf(year);
 
         Page<CarStereo> stereos = carStereoRepository.search(
                 query,
                 brand,
-                year,
                 yearValue,
                 size,
                 display,
@@ -46,10 +48,13 @@ public class SearchController {
         model.addAttribute("pagedCarStereos", stereos);
         model.addAttribute("query", query);
         model.addAttribute("brand", brand);
-        model.addAttribute("year", year);
+        model.addAttribute("year", yearValue);
         model.addAttribute("size", size);
         model.addAttribute("display", display);
         model.addAttribute("input", input);
+
+        boolean isAdmin = authentication != null && authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        model.addAttribute("isAdmin", isAdmin);
 
         return "page/search";
     }

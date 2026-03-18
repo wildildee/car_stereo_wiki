@@ -5,6 +5,9 @@
 }
 
 /* We still want to let Bulma handle .tag but maybe add some overrides if needed */
+.tag {
+    border: none !important;
+}
 .tag a {
     color: inherit;
     text-decoration: none;

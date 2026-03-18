@@ -7,6 +7,22 @@
     <header th:replace="~{template :: header}"></header>
     <section class="section">
         <div class="container">
+            <div class="level">
+                <div class="level-left">
+                    <div>
+                        <h1 class="title">Search Results</h1>
+                        <h2 class="subtitle" th:if="${(query != null && !query.isEmpty()) || (brand != null && !brand.isEmpty()) || (year != null && !year.isEmpty()) || (size != null && !size.isEmpty()) || (display != null && !display.isEmpty()) || (input != null && !input.isEmpty())}">
+                            Searching for:
+                            <span th:if="${query != null && !query.isEmpty()}" th:text="'Name Contains: ' + ${query} + ' '"></span>
+                            <span th:if="${brand != null && !brand.isEmpty()}" th:text="'Brand: ' + ${brand} + ' '"></span>
+                            <span th:if="${year != null && !year.isEmpty()}" th:text="'Year: ' + ${year} + ' '"></span>
+                            <span th:if="${size != null && !size.isEmpty()}" th:text="'Size: ' + ${size} + ' '"></span>
+                            <span th:if="${display != null && !display.isEmpty()}" th:text="'Display: ' + ${display} + ' '"></span>
+                            <span th:if="${input != null && !input.isEmpty()}" th:text="'Input: ' + ${input} + ' '"></span>
+                        </h2>
+                    </div>
+                </div>
+            </div>
             <div th:replace="~{fragment/CarStereoList :: carStereoList(${pagedCarStereos})}"></div>
         </div>
     </section>

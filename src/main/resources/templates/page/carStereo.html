@@ -15,32 +15,34 @@
                 </div>
                 <div class="column">
                     <div class="box">
-                        <h1 class="title" th:text="${carStereo.name}"></h1>
+                        <div class="is-flex is-justify-content-space-between is-align-items-center">
+                            <h1 class="title" th:text="${carStereo.name}"></h1>
+                            <a class="button is-small is-link" th:href="@{/carStereo/{name}/edit(name=${carStereo.name})}" th:if="${isAdmin}">Edit</a>
+                        </div>
                         <h2 class="subtitle" th:text="'Year: ' + ${carStereo.year}"></h2>
                         
+                        <table class="table is-fullwidth">
+                            <thead>
+                                <tr>
+                                    <th>Brand</th>
+                                    <th>Size</th>
+                                    <th>Display</th>
+                                    <th>Inputs</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><div th:replace="~{fragment/tagBox :: tagBox(${carStereo.brands})}"></div></td>
+                                    <td><div th:replace="~{fragment/tagBox :: tagBox(${carStereo.sizes})}"></div></td>
+                                    <td><div th:replace="~{fragment/tagBox :: tagBox(${carStereo.displays})}"></div></td>
+                                    <td><div th:replace="~{fragment/tagBox :: tagBox(${carStereo.inputs})}"></div></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
                         <div class="content">
                             <h3 class="is-size-5">Description</h3>
                             <p th:text="${carStereo.description}"></p>
-                        </div>
-
-                        <div class="field">
-                            <label class="label">Brands</label>
-                            <div th:replace="~{fragment/tagBox :: tagBox(${carStereo.brands})}"></div>
-                        </div>
-
-                        <div class="field">
-                            <label class="label">Sizes</label>
-                            <div th:replace="~{fragment/tagBox :: tagBox(${carStereo.sizes})}"></div>
-                        </div>
-
-                        <div class="field">
-                            <label class="label">Displays</label>
-                            <div th:replace="~{fragment/tagBox :: tagBox(${carStereo.displays})}"></div>
-                        </div>
-
-                        <div class="field">
-                            <label class="label">Inputs</label>
-                            <div th:replace="~{fragment/tagBox :: tagBox(${carStereo.inputs})}"></div>
                         </div>
                     </div>
                 </div>
