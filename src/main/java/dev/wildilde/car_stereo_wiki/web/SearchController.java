@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class SearchController {
 
-    private static final int PAGE_SIZE = 100;
+    private static final int PAGE_SIZE = 20;
 
     private final CarStereoRepository carStereoRepository;
 
