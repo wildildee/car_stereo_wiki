@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
+@Table(name = "car_stereo")
 @Entity
 public class CarStereo {
 
@@ -32,6 +33,9 @@ public class CarStereo {
     @ManyToMany
     @JoinTable(name = "car_stereo_input_tag")
     private List<Tag> inputs;
+
+    @OneToMany(mappedBy = "carStereo")
+    private List<PricingInfo> pricingInfos;
 
     public long getId() {
         return id;
@@ -103,5 +107,13 @@ public class CarStereo {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<PricingInfo> getPricingInfos() {
+        return pricingInfos;
+    }
+
+    public void setPricingInfos(List<PricingInfo> pricingInfos) {
+        this.pricingInfos = pricingInfos;
     }
 }

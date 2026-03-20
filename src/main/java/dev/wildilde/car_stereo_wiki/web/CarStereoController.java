@@ -1,9 +1,9 @@
 package dev.wildilde.car_stereo_wiki.web;
 
 import dev.wildilde.car_stereo_wiki.entity.CarStereo;
-import dev.wildilde.car_stereo_wiki.entity.Tag;
 import dev.wildilde.car_stereo_wiki.repository.CarStereoRepository;
 import dev.wildilde.car_stereo_wiki.repository.TagRepository;
+import dev.wildilde.car_stereo_wiki.service.PricingService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Controller;
@@ -21,10 +21,12 @@ import java.util.List;
 public class CarStereoController {
     private final CarStereoRepository carStereoRepository;
     private final TagRepository tagRepository;
+    private final PricingService pricingService;
 
-    public CarStereoController(CarStereoRepository carStereoRepository, TagRepository tagRepository) {
+    public CarStereoController(CarStereoRepository carStereoRepository, TagRepository tagRepository, PricingService pricingService) {
         this.carStereoRepository = carStereoRepository;
         this.tagRepository = tagRepository;
+        this.pricingService = pricingService;
     }
 
     @GetMapping("/carStereo/{name}")
@@ -34,6 +36,10 @@ public class CarStereoController {
         if(carStereo == null) {
             return "redirect:/";
         }
+
+        // Ensure pricing info exists and is up to date
+        carStereo = pricingService.updatePricingInfo(carStereo);
+
         model.addAttribute("carStereo", carStereo);
         model.addAttribute("query", query);
         
@@ -49,6 +55,10 @@ public class CarStereoController {
         if(carStereo == null) {
             return "redirect:/";
         }
+
+        // Ensure pricing info exists and is up to date
+        carStereo = pricingService.updatePricingInfo(carStereo);
+
         model.addAttribute("carStereo", carStereo);
         model.addAttribute("allBrands", tagRepository.findAllByType("brand"));
         model.addAttribute("allSizes", tagRepository.findAllByType("size"));
@@ -138,6 +148,10 @@ public class CarStereoController {
             carStereo.setInputs(new ArrayList<>());
         }
         carStereoRepository.save(carStereo);
+
+        // Ensure at least one pricing info exists
+        pricingService.createInitialPricingInfo(carStereo);
+
         return "redirect:/carStereo/" + carStereo.getName();
     }
 }
