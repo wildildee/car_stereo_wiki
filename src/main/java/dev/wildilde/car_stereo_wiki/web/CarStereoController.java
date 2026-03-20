@@ -1,8 +1,9 @@
 package dev.wildilde.car_stereo_wiki.web;
 
+import dev.wildilde.car_stereo_wiki.entity.GalleryImage;
 import dev.wildilde.car_stereo_wiki.entity.CarStereo;
-import dev.wildilde.car_stereo_wiki.entity.Tag;
 import dev.wildilde.car_stereo_wiki.repository.CarStereoRepository;
+import dev.wildilde.car_stereo_wiki.repository.GalleryImageRepository;
 import dev.wildilde.car_stereo_wiki.repository.TagRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -62,7 +63,8 @@ public class CarStereoController {
                          @RequestParam(value = "brands", required = false) List<Long> brandIds,
                          @RequestParam(value = "sizes", required = false) List<Long> sizeIds,
                          @RequestParam(value = "displays", required = false) List<Long> displayIds,
-                         @RequestParam(value = "inputs", required = false) List<Long> inputIds) {
+                         @RequestParam(value = "inputs", required = false) List<Long> inputIds,
+                         @RequestParam(value = "galleryImageUrls", required = false) List<String> galleryImageUrls) {
         CarStereo existing = carStereoRepository.findCarStereoByName(name);
         if(existing == null) {
             return "redirect:/";
@@ -70,7 +72,6 @@ public class CarStereoController {
         
         existing.setName(carStereo.getName());
         existing.setYear(carStereo.getYear());
-        existing.setImage(carStereo.getImage());
         existing.setDescription(carStereo.getDescription());
         
         if (brandIds != null) {
@@ -96,6 +97,17 @@ public class CarStereoController {
         } else {
             existing.setInputs(new ArrayList<>());
         }
+
+        if (galleryImageUrls != null) {
+            existing.getGalleryImages().clear();
+            for (String url : galleryImageUrls) {
+                if (url != null && !url.trim().isEmpty()) {
+                    existing.getGalleryImages().add(new GalleryImage(existing, url));
+                }
+            }
+        } else {
+            existing.getGalleryImages().clear();
+        }
         
         carStereoRepository.save(existing);
         return "redirect:/carStereo/" + existing.getName();
@@ -116,7 +128,8 @@ public class CarStereoController {
                            @RequestParam(value = "brands", required = false) List<Long> brandIds,
                            @RequestParam(value = "sizes", required = false) List<Long> sizeIds,
                            @RequestParam(value = "displays", required = false) List<Long> displayIds,
-                           @RequestParam(value = "inputs", required = false) List<Long> inputIds) {
+                           @RequestParam(value = "inputs", required = false) List<Long> inputIds,
+                           @RequestParam(value = "galleryImageUrls", required = false) List<String> galleryImageUrls) {
         if (brandIds != null) {
             carStereo.setBrands(tagRepository.findAllById(brandIds));
         } else {
@@ -137,7 +150,19 @@ public class CarStereoController {
         } else {
             carStereo.setInputs(new ArrayList<>());
         }
+
+        List<GalleryImage> galleryImages = new ArrayList<>();
+        if (galleryImageUrls != null) {
+            for (String url : galleryImageUrls) {
+                if (url != null && !url.trim().isEmpty()) {
+                    galleryImages.add(new GalleryImage(carStereo, url));
+                }
+            }
+        }
+        carStereo.setGalleryImages(galleryImages);
+
         carStereoRepository.save(carStereo);
+
         return "redirect:/carStereo/" + carStereo.getName();
     }
 }

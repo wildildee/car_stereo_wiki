@@ -3,9 +3,12 @@
 <body>
   <footer class="footer" th:fragment="footer">
       <div class="content has-text-centered">
-          <p>
-              &copy; Car Stereo Wiki
-          </p>
+          <a th:href="@{/}">Home</a> |
+          <a th:href="@{/search}">Search</a>
+          <span class="admin-only is-hidden">
+                  | <a th:href="@{/carStereo/add}">Add Stereo</a> |
+                  <a th:href="@{/tag/add}">Add Tag</a>
+          </span>
       </div>
   </footer>
 </body>
