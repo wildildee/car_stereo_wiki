@@ -11,7 +11,7 @@
         <div class="container">
             <div class="columns">
                 <!-- Image column -->
-                <div class="column is-one-third" th:if="${carStereo.image != null}">
+                <div class="column is-one-third" th:if="${carStereo.galleryImages != null && !carStereo.galleryImages.isEmpty()}">
                     <div class="box">
                         <div th:replace="~{fragment/gallery :: gallery(${carStereo.galleryImages}, ${carStereo.name})}"></div>
                     </div>

@@ -12,17 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootApplication
 public class CarStereoWikiApplication {
-
-    private final CarStereoRepository carStereoRepository;
-    private final TagRepository tagRepository;
-    private final GalleryImageRepository galleryImageRepository;
-
-    public CarStereoWikiApplication(TagRepository tagRepository, CarStereoRepository carStereoRepository, GalleryImageRepository galleryImageRepository) {
-        this.carStereoRepository = carStereoRepository;
-        this.tagRepository = tagRepository;
-        this.galleryImageRepository = galleryImageRepository;
-    }
-
     public static void main(String[] args) {
         SpringApplication.run(CarStereoWikiApplication.class, args);
     }

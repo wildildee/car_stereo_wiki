@@ -16,7 +16,6 @@ public class CarStereo {
     @Column(unique = true)
     private String name;
     private int year;
-    private String image;
     @Column(length = MAX_DESCRIPTION_LENGTH)
     private String description;
 
@@ -58,14 +57,6 @@ public class CarStereo {
 
     public void setYear(int year) {
         this.year = year;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
     }
 
     public List<Tag> getBrands() {

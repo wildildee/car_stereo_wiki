@@ -22,12 +22,10 @@ import java.util.List;
 public class CarStereoController {
     private final CarStereoRepository carStereoRepository;
     private final TagRepository tagRepository;
-    private final GalleryImageRepository galleryImageRepository;
 
-    public CarStereoController(CarStereoRepository carStereoRepository, TagRepository tagRepository, GalleryImageRepository galleryImageRepository) {
+    public CarStereoController(CarStereoRepository carStereoRepository, TagRepository tagRepository) {
         this.carStereoRepository = carStereoRepository;
         this.tagRepository = tagRepository;
-        this.galleryImageRepository = galleryImageRepository;
     }
 
     @GetMapping("/carStereo/{name}")
@@ -65,7 +63,8 @@ public class CarStereoController {
                          @RequestParam(value = "brands", required = false) List<Long> brandIds,
                          @RequestParam(value = "sizes", required = false) List<Long> sizeIds,
                          @RequestParam(value = "displays", required = false) List<Long> displayIds,
-                         @RequestParam(value = "inputs", required = false) List<Long> inputIds) {
+                         @RequestParam(value = "inputs", required = false) List<Long> inputIds,
+                         @RequestParam(value = "galleryImageUrls", required = false) List<String> galleryImageUrls) {
         CarStereo existing = carStereoRepository.findCarStereoByName(name);
         if(existing == null) {
             return "redirect:/";
@@ -73,7 +72,6 @@ public class CarStereoController {
         
         existing.setName(carStereo.getName());
         existing.setYear(carStereo.getYear());
-        existing.setImage(carStereo.getImage());
         existing.setDescription(carStereo.getDescription());
         
         if (brandIds != null) {
@@ -99,6 +97,17 @@ public class CarStereoController {
         } else {
             existing.setInputs(new ArrayList<>());
         }
+
+        if (galleryImageUrls != null) {
+            existing.getGalleryImages().clear();
+            for (String url : galleryImageUrls) {
+                if (url != null && !url.trim().isEmpty()) {
+                    existing.getGalleryImages().add(new GalleryImage(existing, url));
+                }
+            }
+        } else {
+            existing.getGalleryImages().clear();
+        }
         
         carStereoRepository.save(existing);
         return "redirect:/carStereo/" + existing.getName();
@@ -119,7 +128,8 @@ public class CarStereoController {
                            @RequestParam(value = "brands", required = false) List<Long> brandIds,
                            @RequestParam(value = "sizes", required = false) List<Long> sizeIds,
                            @RequestParam(value = "displays", required = false) List<Long> displayIds,
-                           @RequestParam(value = "inputs", required = false) List<Long> inputIds) {
+                           @RequestParam(value = "inputs", required = false) List<Long> inputIds,
+                           @RequestParam(value = "galleryImageUrls", required = false) List<String> galleryImageUrls) {
         if (brandIds != null) {
             carStereo.setBrands(tagRepository.findAllById(brandIds));
         } else {
@@ -140,11 +150,18 @@ public class CarStereoController {
         } else {
             carStereo.setInputs(new ArrayList<>());
         }
-        carStereoRepository.save(carStereo);
 
-        if (carStereo.getImage() != null && !carStereo.getImage().isEmpty()) {
-            galleryImageRepository.save(new GalleryImage(carStereo, carStereo.getImage()));
+        List<GalleryImage> galleryImages = new ArrayList<>();
+        if (galleryImageUrls != null) {
+            for (String url : galleryImageUrls) {
+                if (url != null && !url.trim().isEmpty()) {
+                    galleryImages.add(new GalleryImage(carStereo, url));
+                }
+            }
         }
+        carStereo.setGalleryImages(galleryImages);
+
+        carStereoRepository.save(carStereo);
 
         return "redirect:/carStereo/" + carStereo.getName();
     }

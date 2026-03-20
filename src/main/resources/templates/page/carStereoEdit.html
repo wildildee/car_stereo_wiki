@@ -24,11 +24,31 @@
             </div>
 
             <div class="field">
-                <label class="label">Image URL</label>
+                <label class="label">Gallery Images</label>
+                <div class="block" id="gallery-inputs">
+                    <div class="field has-addons" th:each="image : ${carStereo.galleryImages}">
+                        <div class="control is-expanded">
+                            <input class="input" type="text" name="galleryImageUrls" th:value="${image.imageURL}" placeholder="https://example.com/image.jpg">
+                        </div>
+                        <div class="control">
+                            <button type="button" class="button is-danger remove-image">Remove</button>
+                        </div>
+                    </div>
+                    <div class="field has-addons" th:if="${carStereo.galleryImages == null || carStereo.galleryImages.isEmpty()}">
+                        <div class="control is-expanded">
+                            <input class="input" type="text" name="galleryImageUrls" value="" placeholder="https://example.com/image.jpg">
+                        </div>
+                        <div class="control">
+                            <button type="button" class="button is-danger remove-image">Remove</button>
+                        </div>
+                    </div>
+                </div>
                 <div class="control">
-                    <input class="input" type="text" th:field="*{image}">
+                    <button type="button" class="button is-small is-primary" id="add-image">Add Image</button>
                 </div>
             </div>
+
+            <script src="/js/carStereoEdit.js"></script>
 
             <div class="field">
                 <label class="label">Description</label>
