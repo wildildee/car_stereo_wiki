@@ -12,3 +12,46 @@
     color: inherit;
     text-decoration: none;
 }
+
+/* Color tags based on their name */
+@media (prefers-color-scheme: light) {
+    body {
+        --tag-saturation: 80%;
+        --tag-lightness: 70%;
+    }
+}
+@media (prefers-color-scheme: dark) {
+    body {
+        --tag-saturation: 80%;
+        --tag-lightness: 30%;
+    }
+}
+
+/* Brand */
+.tag[data-tag="Alpine"] { background-color: HSL(210deg, var(--tag-saturation), var(--tag-lightness)); }
+
+/* Size */
+.tag[data-tag="1-DIN"] { background-color: HSL(150deg, var(--tag-saturation), var(--tag-lightness)); }
+.tag[data-tag="2-DIN"] { background-color: HSL(30deg, var(--tag-saturation), var(--tag-lightness)); }
+
+/* Display */
+.tag[data-tag="LCD"] { background-color: HSL(60deg, var(--tag-saturation), var(--tag-lightness)); }
+.tag[data-tag="OLED"] { background-color: HSL(180deg, var(--tag-saturation), var(--tag-lightness)); }
+.tag[data-tag="Video"] { background-color: HSL(210deg, var(--tag-saturation), var(--tag-lightness)); }
+
+.tag[data-tag="Flip"] { background-color: HSL(0deg, var(--tag-saturation), var(--tag-lightness)); }
+.tag[data-tag="Fold"] { background-color: HSL(300deg, var(--tag-saturation), var(--tag-lightness)); }
+
+/* Inputs */
+.tag[data-tag="FM/AM"] { background-color: HSL(0deg, var(--tag-saturation), var(--tag-lightness)); }
+.tag[data-tag="CD"] { background-color: HSL(30deg, var(--tag-saturation), var(--tag-lightness)); }
+.tag[data-tag="MD"] { background-color: HSL(210deg, var(--tag-saturation), var(--tag-lightness)); }
+.tag[data-tag="MD Changer"] { background-color: HSL(210deg, var(--tag-saturation), var(--tag-lightness)); }
+.tag[data-tag="DVD"] { background-color: HSL(60deg, var(--tag-saturation), var(--tag-lightness)); }
+.tag[data-tag="BT"] { background-color: HSL(120deg, var(--tag-saturation), var(--tag-lightness)); }
+.tag[data-tag="SiriusXM"] { background-color: HSL(120deg, var(--tag-saturation), var(--tag-lightness)); }
+.tag[data-tag="Ai-NET"] { background-color: HSL(300deg, var(--tag-saturation), var(--tag-lightness)); }
+.tag[data-tag="FullSpeed"] { background-color: HSL(300deg, var(--tag-saturation), var(--tag-lightness)); }
+.tag[data-tag="AUX"] { background-color: HSL(240deg, var(--tag-saturation), var(--tag-lightness)); }
+.tag[data-tag="USB"] { background-color: HSL(240deg, var(--tag-saturation), var(--tag-lightness)); }
+.tag[data-tag="HDD"] { background-color: HSL(180deg, var(--tag-saturation), var(--tag-lightness)); }
