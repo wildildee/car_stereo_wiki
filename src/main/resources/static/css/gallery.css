@@ -1,0 +1,13 @@
+.gallery-big-image {
+    object-fit: contain;
+}
+
+.gallery-thumbnail {
+    object-fit: cover;
+    cursor: pointer;
+}
+
+.gallery-thumbnail.is-focused {
+    outline: 2px solid #3273dc;
+    outline-offset: 2px;
+}

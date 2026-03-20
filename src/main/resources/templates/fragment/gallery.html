@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<body>
+<!--/*@thymesVar id="galleryImages" type="java.util.List"*/-->
+    <div th:fragment="gallery(galleryImages, altText)">
+        <div class="block">
+            <figure class="image is-4by3">
+                <img class="gallery-big-image" th:if="${galleryImages.size() > 0}" th:src="${galleryImages.get(0).imageURL}" th:alt="${altText}">
+            </figure>
+        </div>
+        <div class="block">
+            <div class="grid is-col-min-2">
+                <div class="cell" th:each="galleryImage : ${galleryImages}">
+                    <figure class="image is-square">
+                        <img th:class="${'gallery-thumbnail' + (galleryImages.indexOf(galleryImage) == 0 ? ' is-focused' : '')}"
+                             th:src="${galleryImage.imageURL}" th:alt="${'Image' + (galleryImages.indexOf(galleryImage) + 1)}"
+                             >
+                    </figure>
+                </div>
+                <!-- Add empty cells to fill the first row of grid -->
+                <div class="cell" th:if="${galleryImages.size() < 5}"></div>
+                <div class="cell" th:if="${galleryImages.size() < 4}"></div>
+                <div class="cell" th:if="${galleryImages.size() < 3}"></div>
+                <div class="cell" th:if="${galleryImages.size() < 2}"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

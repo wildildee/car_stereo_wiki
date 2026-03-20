@@ -1,8 +1,9 @@
 package dev.wildilde.car_stereo_wiki.web;
 
+import dev.wildilde.car_stereo_wiki.entity.GalleryImage;
 import dev.wildilde.car_stereo_wiki.entity.CarStereo;
-import dev.wildilde.car_stereo_wiki.entity.Tag;
 import dev.wildilde.car_stereo_wiki.repository.CarStereoRepository;
+import dev.wildilde.car_stereo_wiki.repository.GalleryImageRepository;
 import dev.wildilde.car_stereo_wiki.repository.TagRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,10 +22,12 @@ import java.util.List;
 public class CarStereoController {
     private final CarStereoRepository carStereoRepository;
     private final TagRepository tagRepository;
+    private final GalleryImageRepository galleryImageRepository;
 
-    public CarStereoController(CarStereoRepository carStereoRepository, TagRepository tagRepository) {
+    public CarStereoController(CarStereoRepository carStereoRepository, TagRepository tagRepository, GalleryImageRepository galleryImageRepository) {
         this.carStereoRepository = carStereoRepository;
         this.tagRepository = tagRepository;
+        this.galleryImageRepository = galleryImageRepository;
     }
 
     @GetMapping("/carStereo/{name}")
@@ -138,6 +141,11 @@ public class CarStereoController {
             carStereo.setInputs(new ArrayList<>());
         }
         carStereoRepository.save(carStereo);
+
+        if (carStereo.getImage() != null && !carStereo.getImage().isEmpty()) {
+            galleryImageRepository.save(new GalleryImage(carStereo, carStereo.getImage()));
+        }
+
         return "redirect:/carStereo/" + carStereo.getName();
     }
 }

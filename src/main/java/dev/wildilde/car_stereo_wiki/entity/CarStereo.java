@@ -33,6 +33,9 @@ public class CarStereo {
     @JoinTable(name = "car_stereo_input_tag")
     private List<Tag> inputs;
 
+    @OneToMany(mappedBy = "carStereo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<GalleryImage> galleryImages;
+
     public long getId() {
         return id;
     }
@@ -95,6 +98,14 @@ public class CarStereo {
 
     public void setSizes(List<Tag> sizes) {
         this.sizes = sizes;
+    }
+
+    public List<GalleryImage> getGalleryImages() {
+        return galleryImages;
+    }
+
+    public void setGalleryImages(List<GalleryImage> galleryImages) {
+        this.galleryImages = galleryImages;
     }
 
     public String getDescription() {
