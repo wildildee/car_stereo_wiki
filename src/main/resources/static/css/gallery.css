@@ -1,5 +1,6 @@
 .gallery-big-image {
     object-fit: contain;
+    cursor: pointer;
 }
 
 .gallery-thumbnail {

@@ -3,11 +3,26 @@
 <body>
 <!--/*@thymesVar id="galleryImages" type="java.util.List"*/-->
     <div th:fragment="gallery(galleryImages, altText)">
+
+        <!-- Gallery Big Image -->
         <div class="block">
             <figure class="image is-4by3">
                 <img class="gallery-big-image" th:if="${galleryImages.size() > 0}" th:src="${galleryImages.get(0).imageURL}" th:alt="${altText}">
             </figure>
         </div>
+
+        <!-- Modal for the full-size image -->
+        <div id="image-modal" class="modal">
+            <div class="modal-background"></div>
+            <div class="modal-content">
+                <p class="image">
+                    <img id="modal-image" src="" alt="Full size image">
+                </p>
+            </div>
+            <button class="modal-close is-large" aria-label="close"></button>
+        </div>
+
+        <!-- Gallery Thumbnails -->
         <div class="block">
             <div class="grid is-col-min-2">
                 <div class="cell" th:each="galleryImage : ${galleryImages}">
