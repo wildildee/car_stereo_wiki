@@ -18,7 +18,7 @@ public class PricingInfo {
     private String website;
 
     // Filters
-    private float minPrice = 20;
+    private int minPrice = 20;
 
     private Instant lastUpdated;
     @OneToMany(mappedBy = "pricingInfo")
@@ -48,11 +48,11 @@ public class PricingInfo {
         this.website = website;
     }
 
-    public float getMinPrice() {
+    public int getMinPrice() {
         return minPrice;
     }
 
-    public void setMinPrice(float minPrice) {
+    public void setMinPrice(int minPrice) {
         this.minPrice = minPrice;
     }
 

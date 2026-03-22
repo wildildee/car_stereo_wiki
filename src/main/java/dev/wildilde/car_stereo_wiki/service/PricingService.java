@@ -18,6 +18,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Service
@@ -25,8 +26,10 @@ public class PricingService {
     private static final Logger log = LoggerFactory.getLogger(PricingService.class);
     private static final Duration UPDATE_INTERVAL = Duration.ofDays(1); // 1 day TODO: Make configurable via enviroment variable
     private static final List<String> PRICING_WEBSITES = List.of("ebay"); // TODO: Make configurable via enviroment variable
-    private static final int EBAY_PRICES_LIMIT = 5; // TODO: Make configurable via enviroment variable
-    private static final String EBAY_PRICE_CURRENCY = "CAD"; // TODO: Make configurable via enviroment variable
+    private static final int EBAY_PRICES_LIMIT = 8; // TODO: Make configurable via enviroment variable
+    private static final String EBAY_TITLE_FILTER = " -\"face plate\" -faceplate -\"parts only\"";
+    @Value("${ebay.api.currency}")
+    private static final String EBAY_PRICE_CURRENCY = "CAD";
     
     private final PricingInfoRepository pricingInfoRepository;
     private final CarStereoRepository carStereoRepository;
@@ -68,14 +71,14 @@ public class PricingService {
                 PricingInfo pricingInfo = new PricingInfo();
                 pricingInfo.setCarStereo(carStereo);
                 pricingInfo.setWebsite(website);
-                pricingInfo.setLastUpdated(Instant.now());
+                pricingInfo.setLastUpdated(Instant.now().minus(7, ChronoUnit.DAYS));
                 pricingInfoRepository.save(pricingInfo);
                 created = true;
             }
         }
 
         if (created) {
-            // Refetch to get updated relation
+            // Refetch
             carStereo = carStereoRepository.findCarStereoByName(carStereo.getName());
             pricingInfos = carStereo.getPricingInfos();
         }
@@ -103,6 +106,13 @@ public class PricingService {
     }
 
     private void updatePricingInfo(PricingInfo info) {
+        // Clear old prices
+        if (info.getPrices() != null) {
+            pricingItemRepository.deleteAll(info.getPrices());
+            info.getPrices().clear();
+        }
+
+
         if ("ebay".equals(info.getWebsite())) {
             fetchEbayPrices(info);
         }
@@ -121,18 +131,18 @@ public class PricingService {
             if (token == null) return;
 
             String query = info.getCarStereo().getName();
+
             // eBay Browse API: search for sold items
-            // endpoint: https://api.ebay.com/buy/browse/v1/item_summary/search
-            // filter: conditions:{USED|NEW}, lastSoldDate:[...], price:[min..]
-            // fieldgroups: MATCHING_ITEMS
-            // sort: -lastSoldDate
-            
-            String url = "https://api.ebay.com/buy/browse/v1/item_summary/search?q=" + query + 
-                         "&filter=price:[" + info.getMinPrice() + "..],priceCurrency:" + EBAY_PRICE_CURRENCY + "&sort=-lastSoldDate&limit=" + EBAY_PRICES_LIMIT;
+            String url = "https://api.ebay.com/buy/browse/v1/item_summary/search?q=" + query + EBAY_TITLE_FILTER +
+                         "&filter=conditions:%7BUSED%7D,price:[" + info.getMinPrice() + "..],priceCurrency:" + EBAY_PRICE_CURRENCY +
+                         "&sort=price" +
+                         "&limit=" + EBAY_PRICES_LIMIT;
 
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(token);
             headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+            headers.set("X-EBAY-C-MARKETPLACE-ID", "EBAY_CA");
+            headers.set("X-EBAY-C-CURRENCY", EBAY_PRICE_CURRENCY);
             
             HttpEntity<String> entity = new HttpEntity<>(headers);
             if (loggingEnabled) {
@@ -162,8 +172,11 @@ public class PricingService {
                         if (priceMap != null) {
                             pricingItem.setPrice(Float.parseFloat(priceMap.get("value").toString()));
                         }
-                        
-                        pricingItem.setLink((String) item.get("itemWebUrl"));
+
+                        // Strip any query parameters to keep the link short
+                        String link = item.get("itemWebUrl").toString().split("&")[0];
+                        System.out.println(link);
+                        pricingItem.setLink(link);
                         
                         Map<String, Object> imageMap = (Map<String, Object>) item.get("image");
                         if (imageMap != null) {
@@ -173,6 +186,10 @@ public class PricingService {
                         pricingItemRepository.save(pricingItem);
                         info.getPrices().add(pricingItem);
                     }
+                } else {
+                    // Something went wrong, log it
+                    System.err.println("No item summaries found in eBay response");
+                    System.err.println(response.getBody());
                 }
             }
         } catch (Exception e) {

@@ -42,37 +42,16 @@
                             </tbody>
                         </table>
 
+                        <div class="content" th:if="${carStereo.pricingInfos != null && !carStereo.pricingInfos.isEmpty()}">
+                            <h3 class="is-size-5">Pricing Info</h3>
+                            <div th:each="info : ${carStereo.pricingInfos}" class="block">
+                                <div th:replace="~{fragment/pricingInfo :: pricingInfo(${info})}"></div>
+                            </div>
+                        </div>
+
                         <div class="content">
                             <h3 class="is-size-5">Description</h3>
                             <p style="white-space: pre-wrap;" th:text="${carStereo.description}"></p>
-                        </div>
-
-                        <div class="content" th:if="${carStereo.pricingInfos != null && !carStereo.pricingInfos.isEmpty()}">
-                            <h3 class="is-size-5">Pricing Info</h3>
-                            <div th:each="info : ${carStereo.pricingInfos}" class="mb-5">
-                                <h4 class="is-size-6" th:text="${#strings.capitalize(info.website)} + ' (Last updated: ' + ${#temporals.format(info.lastUpdated, 'yyyy-MM-dd HH:mm')} + ')'"></h4>
-                                <table class="table is-narrow is-fullwidth" th:if="${info.prices != null && !info.prices.isEmpty()}">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 100px;">Image</th>
-                                            <th>Price</th>
-                                            <th>Link</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr th:each="priceItem : ${info.prices}">
-                                            <td>
-                                                <figure class="image is-64x64" th:if="${priceItem.image != null}">
-                                                    <img th:src="${priceItem.image}" alt="Item image">
-                                                </figure>
-                                            </td>
-                                            <td th:text="${priceItem.price} + ' ' + ${T(dev.wildilde.car_stereo_wiki.service.PricingService).EBAY_PRICE_CURRENCY}"></td>
-                                            <td><a th:href="${priceItem.link}" target="_blank">View on Website</a></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <p th:unless="${info.prices != null && !info.prices.isEmpty()}">No recent sales found.</p>
-                            </div>
                         </div>
                     </div>
                 </div>
