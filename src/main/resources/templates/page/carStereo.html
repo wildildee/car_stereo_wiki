@@ -3,16 +3,21 @@
 <head th:replace="~{template :: head(${carStereo.name} + ' - Car Stereo Wiki')}">
     <title th:text="${carStereo.name} + ' - Car Stereo Wiki'">Car Stereo Details</title>
 </head>
+<link rel="stylesheet" href="/css/gallery.css">
+<script src="/js/gallery.js"></script>
 <body>
     <header th:replace="~{template :: header}"></header>
     <section class="section">
         <div class="container">
             <div class="columns">
-                <div class="column is-one-third" th:if="${carStereo.image != null}">
-                    <figure class="image">
-                        <img th:src="${carStereo.image}" th:alt="${carStereo.name}">
-                    </figure>
+                <!-- Image column -->
+                <div class="column is-one-third" th:if="${carStereo.galleryImages != null && !carStereo.galleryImages.isEmpty()}">
+                    <div class="box">
+                        <div th:replace="~{fragment/gallery :: gallery(${carStereo.galleryImages}, ${carStereo.name})}"></div>
+                    </div>
                 </div>
+
+                <!-- Details column -->
                 <div class="column">
                     <div class="box">
                         <div class="is-flex is-justify-content-space-between is-align-items-center">
@@ -20,9 +25,7 @@
                             <a class="button is-small is-link" th:href="@{/carStereo/{name}/edit(name=${carStereo.name})}" th:if="${isAdmin}">Edit</a>
                         </div>
                         <h2 class="subtitle" th:text="'Year: ' + ${carStereo.year}"></h2>
-                        
-                        
-                        
+
                         <table class="table is-fullwidth">
                             <thead>
                                 <tr>

@@ -24,11 +24,31 @@
             </div>
 
             <div class="field">
-                <label class="label">Image URL</label>
+                <label class="label">Gallery Images</label>
+                <div class="block" id="gallery-inputs">
+                    <div class="field has-addons" th:each="image : ${carStereo.galleryImages}">
+                        <div class="control is-expanded">
+                            <input class="input" type="text" name="galleryImageUrls" th:value="${image.imageURL}" placeholder="https://example.com/image.jpg">
+                        </div>
+                        <div class="control">
+                            <button type="button" class="button is-danger remove-image">Remove</button>
+                        </div>
+                    </div>
+                    <div class="field has-addons" th:if="${carStereo.galleryImages == null || carStereo.galleryImages.isEmpty()}">
+                        <div class="control is-expanded">
+                            <input class="input" type="text" name="galleryImageUrls" value="" placeholder="https://example.com/image.jpg">
+                        </div>
+                        <div class="control">
+                            <button type="button" class="button is-danger remove-image">Remove</button>
+                        </div>
+                    </div>
+                </div>
                 <div class="control">
-                    <input class="input" type="text" th:field="*{image}">
+                    <button type="button" class="button is-small is-primary" id="add-image">Add Image</button>
                 </div>
             </div>
+
+            <script src="/js/carStereoEdit.js"></script>
 
             <div class="field">
                 <label class="label">Description</label>
@@ -46,7 +66,7 @@
                                 <div class="control" th:each="tag : ${allBrands}">
                                     <div class="tags has-addons">
                                         <label class="tag" th:for="${'brand-' + tag.id}"
-                                               th:style="${tag.color != null ? 'background-color:' + tag.color + ' !important; color: white; cursor: pointer;' : 'cursor: pointer;'}"
+                                               th:data-tag="${tag.name}"
                                                th:text="${tag.name}">Brand</label>
                                         <div class="tag">
                                             <input type="checkbox" name="brands" th:id="${'brand-' + tag.id}" th:value="${tag.id}" 
@@ -66,7 +86,7 @@
                                 <div class="control" th:each="tag : ${allSizes}">
                                     <div class="tags has-addons">
                                         <label class="tag" th:for="${'size-' + tag.id}"
-                                               th:style="${tag.color != null ? 'background-color:' + tag.color + ' !important; color: white; cursor: pointer;' : 'cursor: pointer;'}"
+                                               th:data-tag="${tag.name}"
                                                th:text="${tag.name}">Size</label>
                                         <div class="tag">
                                             <input type="checkbox" name="sizes" th:id="${'size-' + tag.id}" th:value="${tag.id}"
@@ -86,7 +106,7 @@
                                 <div class="control" th:each="tag : ${allDisplays}">
                                     <div class="tags has-addons">
                                         <label class="tag" th:for="${'display-' + tag.id}"
-                                               th:style="${tag.color != null ? 'background-color:' + tag.color + ' !important; color: white; cursor: pointer;' : 'cursor: pointer;'}"
+                                               th:data-tag="${tag.name}"
                                                th:text="${tag.name}">Display</label>
                                         <div class="tag">
                                             <input type="checkbox" name="displays" th:id="${'display-' + tag.id}" th:value="${tag.id}"
@@ -106,7 +126,7 @@
                                 <div class="control" th:each="tag : ${allInputs}">
                                     <div class="tags has-addons">
                                         <label class="tag" th:for="${'input-' + tag.id}"
-                                               th:style="${tag.color != null ? 'background-color:' + tag.color + ' !important; color: white; cursor: pointer;' : 'cursor: pointer;'}"
+                                               th:data-tag="${tag.name}"
                                                th:text="${tag.name}">Input</label>
                                         <div class="tag">
                                             <input type="checkbox" name="inputs" th:id="${'input-' + tag.id}" th:value="${tag.id}"

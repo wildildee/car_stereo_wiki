@@ -17,7 +17,6 @@ public class CarStereo {
     @Column(unique = true)
     private String name;
     private int year;
-    private String image;
     @Column(length = MAX_DESCRIPTION_LENGTH)
     private String description;
 
@@ -34,8 +33,8 @@ public class CarStereo {
     @JoinTable(name = "car_stereo_input_tag")
     private List<Tag> inputs;
 
-    @OneToMany(mappedBy = "carStereo")
-    private List<PricingInfo> pricingInfos;
+    @OneToMany(mappedBy = "carStereo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<GalleryImage> galleryImages;
 
     public long getId() {
         return id;
@@ -59,14 +58,6 @@ public class CarStereo {
 
     public void setYear(int year) {
         this.year = year;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
     }
 
     public List<Tag> getBrands() {
@@ -99,6 +90,14 @@ public class CarStereo {
 
     public void setSizes(List<Tag> sizes) {
         this.sizes = sizes;
+    }
+
+    public List<GalleryImage> getGalleryImages() {
+        return galleryImages;
+    }
+
+    public void setGalleryImages(List<GalleryImage> galleryImages) {
+        this.galleryImages = galleryImages;
     }
 
     public String getDescription() {
