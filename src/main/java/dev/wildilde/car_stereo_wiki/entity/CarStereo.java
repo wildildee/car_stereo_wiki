@@ -36,6 +36,9 @@ public class CarStereo {
     @OneToMany(mappedBy = "carStereo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GalleryImage> galleryImages;
 
+    @OneToMany(mappedBy = "carStereo")
+    private List<PricingInfo> pricingInfos;
+
     public long getId() {
         return id;
     }
