@@ -1,0 +1,22 @@
+.priceHolder {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.priceBlock {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.priceBlock img {
+    height: 100%;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+.priceBlock p {
+    color: var(--bulma-text-strong);
+}

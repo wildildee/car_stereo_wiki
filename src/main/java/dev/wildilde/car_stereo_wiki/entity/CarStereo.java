@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
+@Table(name = "car_stereo")
 @Entity
 public class CarStereo {
 
@@ -105,5 +106,13 @@ public class CarStereo {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<PricingInfo> getPricingInfos() {
+        return pricingInfos;
+    }
+
+    public void setPricingInfos(List<PricingInfo> pricingInfos) {
+        this.pricingInfos = pricingInfos;
     }
 }

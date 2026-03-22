@@ -45,6 +45,13 @@
                             </tbody>
                         </table>
 
+                        <div class="content" th:if="${carStereo.pricingInfos != null && !carStereo.pricingInfos.isEmpty()}">
+                            <h3 class="is-size-5">Pricing Info</h3>
+                            <div th:each="info : ${carStereo.pricingInfos}" class="block">
+                                <div th:replace="~{fragment/pricingInfo :: pricingInfo(${info})}"></div>
+                            </div>
+                        </div>
+
                         <div class="content">
                             <h3 class="is-size-5">Description</h3>
                             <p style="white-space: pre-wrap;" th:text="${carStereo.description}"></p>
