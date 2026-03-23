@@ -70,6 +70,7 @@ public class PricingService {
             if (!existingWebsites.contains(website)) {
                 PricingInfo pricingInfo = new PricingInfo();
                 pricingInfo.setCarStereo(carStereo);
+                carStereo.getPricingInfos().add(pricingInfo);
                 pricingInfo.setWebsite(website);
                 pricingInfo.setLastUpdated(Instant.now().minus(7, ChronoUnit.DAYS));
                 pricingInfoRepository.save(pricingInfo);
@@ -109,12 +110,17 @@ public class PricingService {
         // Clear old prices
         if (info.getPrices() != null) {
             pricingItemRepository.deleteAll(info.getPrices());
-            info.getPrices().clear();
+            info.setPrices(new ArrayList<>());
         }
 
 
         if ("ebay".equals(info.getWebsite())) {
             fetchEbayPrices(info);
+        }
+
+        // Sort prices by price
+        if (info.getPrices() != null) {
+            info.getPrices().sort(Comparator.comparing(PricingItem::getPrice));
         }
         
         // Update timestamp and save info
@@ -128,7 +134,10 @@ public class PricingService {
                 log.info("Fetching eBay prices for: {}", info.getCarStereo().getName());
             }
             String token = getEbayAccessToken();
-            if (token == null) return;
+            if (token == null) {
+                log.error("Failed to get eBay access token");
+                return;
+            }
 
             String query = info.getCarStereo().getName();
 
