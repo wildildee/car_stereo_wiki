@@ -39,6 +39,9 @@ public class CarStereo {
     @OneToMany(mappedBy = "carStereo")
     private List<PricingInfo> pricingInfos;
 
+    @OneToMany(mappedBy = "carStereo")
+    private List<Resource> resources;
+
     public long getId() {
         return id;
     }
@@ -117,5 +120,13 @@ public class CarStereo {
 
     public void setPricingInfos(List<PricingInfo> pricingInfos) {
         this.pricingInfos = pricingInfos;
+    }
+
+    public List<Resource> getResources() {
+        return resources;
+    }
+
+    public void setResources(List<Resource> resources) {
+        this.resources = resources;
     }
 }
