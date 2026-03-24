@@ -36,7 +36,7 @@ public class CarStereoController {
         // Get the car stereo by name
         CarStereo carStereo = carStereoRepository.findCarStereoByName(name);
         if(carStereo == null) {
-            return "redirect:/";
+            throw new ResourceNotFoundException("Car stereo not found: " + name);
         }
 
         // Ensure pricing info exists and is up to date
@@ -55,7 +55,7 @@ public class CarStereoController {
     String editCarStereo(@PathVariable String name, Model model) {
         CarStereo carStereo = carStereoRepository.findCarStereoByName(name);
         if(carStereo == null) {
-            return "redirect:/";
+            throw new ResourceNotFoundException("Car stereo not found: " + name);
         }
 
         // Ensure pricing info exists and is up to date
@@ -81,7 +81,7 @@ public class CarStereoController {
                          @RequestParam(value = "resourceLink", required = false) List<String> resourceLinks) {
         CarStereo existing = carStereoRepository.findCarStereoByName(name);
         if(existing == null) {
-            return "redirect:/";
+            throw new ResourceNotFoundException("Car stereo not found: " + name);
         }
         
         existing.setName(carStereo.getName());

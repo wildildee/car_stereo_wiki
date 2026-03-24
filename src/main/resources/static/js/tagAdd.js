@@ -21,7 +21,7 @@ $(() => {
                 xhr.setRequestHeader(csrfHeader, csrfToken);
             },
             success: () => {
-                a
+                window.location.href = '/';
             },
             error: (xhr) => {
                 alert('Error adding tag: ' + xhr.responseText);
