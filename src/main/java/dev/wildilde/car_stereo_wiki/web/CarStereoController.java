@@ -2,8 +2,8 @@ package dev.wildilde.car_stereo_wiki.web;
 
 import dev.wildilde.car_stereo_wiki.entity.GalleryImage;
 import dev.wildilde.car_stereo_wiki.entity.CarStereo;
+import dev.wildilde.car_stereo_wiki.entity.Resource;
 import dev.wildilde.car_stereo_wiki.repository.CarStereoRepository;
-import dev.wildilde.car_stereo_wiki.repository.GalleryImageRepository;
 import dev.wildilde.car_stereo_wiki.repository.TagRepository;
 import dev.wildilde.car_stereo_wiki.service.PricingService;
 import org.springframework.security.core.Authentication;
@@ -130,7 +130,7 @@ public class CarStereoController {
                 String rName = resourceNames.get(i);
                 String link = resourceLinks.get(i);
                 if (rName != null && !rName.trim().isEmpty() && link != null && !link.trim().isEmpty()) {
-                    existing.getResources().add(new dev.wildilde.car_stereo_wiki.entity.Resource(existing, icon, rName, link));
+                    existing.getResources().add(new Resource(existing, icon, rName, link));
                 }
             }
         } else {

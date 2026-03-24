@@ -11,11 +11,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-public class User {
+public class UserAPI {
 
     private final UserRepository userRepository;
 
-    public User(UserRepository userRepository) {
+    public UserAPI(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 

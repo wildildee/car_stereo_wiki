@@ -39,7 +39,7 @@ public class CarStereo {
     @OneToMany(mappedBy = "carStereo")
     private List<PricingInfo> pricingInfos;
 
-    @OneToMany(mappedBy = "carStereo", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "carStereo")
     private List<Resource> resources;
 
     public long getId() {
