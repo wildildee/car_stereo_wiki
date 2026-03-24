@@ -84,15 +84,15 @@ public class SearchController {
         int minYearTag = carStereoRepository.findLowestYear();
         int maxYearTag = carStereoRepository.findHighestYear();
 
-        System.out.println(minYearTag);
-        System.out.println(maxYearTag);
-
         model.addAttribute("allYears", IntStream.rangeClosed(minYearTag, maxYearTag).boxed().collect(Collectors.toList()));
-
         model.addAttribute("allSizes", tagRepository.findAllByType("size"));
         model.addAttribute("allDisplays", tagRepository.findAllByType("display"));
         model.addAttribute("allInputs", tagRepository.findAllByType("input"));
 
+        // Total number of car stereos
+        model.addAttribute("numberOfStereos", carStereoRepository.count());
+
+        // Is admin?
         boolean isAdmin = authentication != null && authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"));
         model.addAttribute("isAdmin", isAdmin);
 
