@@ -12,6 +12,11 @@
                 </figure>
                 <p class="is-size-7" th:text="'$' + ${#numbers.formatDecimal(priceItem.price, 1, 2)} + ' ' + ${@environment.getProperty('ebay.api.currency')}"></p>
             </a>
+            <!-- Add empty cells to fill the first row of grid -->
+            <div class="cell" th:if="${info.prices.size() < 5}"></div>
+            <div class="cell" th:if="${info.prices.size() < 4}"></div>
+            <div class="cell" th:if="${info.prices.size() < 3}"></div>
+            <div class="cell" th:if="${info.prices.size() < 2}"></div>
         </div>
         <p th:unless="${info.prices != null && !info.prices.isEmpty()}">No recent sales found.</p>
     </div>

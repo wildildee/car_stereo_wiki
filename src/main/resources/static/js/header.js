@@ -28,4 +28,11 @@ $(() => {
             }
         });
     });
+
+    // Bulma Navbar Burger Toggle
+    $(".navbar-burger").on("click", function() {
+        const target = $(this).data("target");
+        $(this).toggleClass("is-active");
+        $("#" + target).toggleClass("is-active");
+    });
 });

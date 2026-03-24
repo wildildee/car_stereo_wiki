@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
+
 @Repository
 public interface CarStereoRepository extends JpaRepository<CarStereo, Long> {
     @Query("""
@@ -18,19 +20,24 @@ public interface CarStereoRepository extends JpaRepository<CarStereo, Long> {
             left join cs.displays displayTag
             left join cs.inputs inputTag
             where (:query = '' or lower(cs.name) like lower(concat('%', :query, '%')))
-              and (:brand = '' or lower(brand.name) = lower(:brand))
-              and (:yearValue is null or cs.year = :yearValue)
-              and (:size = '' or lower(sizeTag.name) = lower(:size))
-              and (:display = '' or lower(displayTag.name) = lower(:display))
-              and (:input = '' or lower(inputTag.name) = lower(:input))
+              and (coalesce(:brands, null) is null or lower(brand.name) in :brands)
+              and (coalesce(:years, null) is null or cs.year in :years)
+              and (coalesce(:sizes, null) is null or lower(sizeTag.name) in :sizes)
+              and (coalesce(:displays, null) is null or lower(displayTag.name) in :displays)
+              and (coalesce(:inputs, null) is null or lower(inputTag.name) in :inputs)
             """)
     Page<CarStereo> search(@Param("query") String query,
-                           @Param("brand") String brand,
-                           @Param("yearValue") Integer yearValue,
-                           @Param("size") String size,
-                           @Param("display") String display,
-                           @Param("input") String input,
+                           @Param("brands") Collection<String> brands,
+                           @Param("years") Collection<Integer> years,
+                           @Param("sizes") Collection<String> sizes,
+                           @Param("displays") Collection<String> displays,
+                           @Param("inputs") Collection<String> inputs,
                            Pageable pageable);
 
     CarStereo findCarStereoByName(String name);
+
+    @Query("select min(cs.year) from CarStereo cs")
+    int findLowestYear();
+    @Query("select max(cs.year) from CarStereo cs")
+    int findHighestYear();
 }
