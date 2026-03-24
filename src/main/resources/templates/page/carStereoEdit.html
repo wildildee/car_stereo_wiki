@@ -48,6 +48,43 @@
                 </div>
             </div>
 
+            <div class="field">
+                <label class="label">Resources</label>
+                <div class="block" id="resource-inputs">
+                    <div class="field has-addons" th:each="resource : ${carStereo.resources}">
+                        <div class="control">
+                            <input class="input" type="text" name="resourceIcon" th:value="${resource.icon}" placeholder="fas fa-file-pdf">
+                        </div>
+                        <div class="control is-expanded">
+                            <input class="input" type="text" name="resourceName" th:value="${resource.name}" placeholder=".pdf">
+                        </div>
+                        <div class="control is-expanded">
+                            <input class="input" type="text" name="resourceLink" th:value="${resource.link}" placeholder="https://example.com/resource.pdf">
+                        </div>
+                        <div class="control">
+                            <button type="button" class="button is-danger remove-resource">Remove</button>
+                        </div>
+                    </div>
+                    <div class="field has-addons" th:if="${carStereo.resources == null || carStereo.resources.isEmpty()}">
+                        <div class="control">
+                            <input class="input" type="text" name="resourceIcon" placeholder="fas fa-file-pdf">
+                        </div>
+                        <div class="control is-expanded">
+                            <input class="input" type="text" name="resourceName" placeholder=".pdf">
+                        </div>
+                        <div class="control is-expanded">
+                            <input class="input" type="text" name="resourceLink" placeholder="https://example.com/resource.pdf">
+                        </div>
+                        <div class="control">
+                            <button type="button" class="button is-danger remove-resource">Remove</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="control">
+                    <button type="button" class="button is-small is-primary" id="add-resource">Add Resource</button>
+                </div>
+            </div>
+
             <script src="/js/carStereoEdit.js"></script>
 
             <div class="field">

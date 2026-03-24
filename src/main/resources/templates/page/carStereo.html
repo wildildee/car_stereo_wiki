@@ -10,10 +10,30 @@
     <section class="section">
         <div class="container">
             <div class="columns">
-                <!-- Image column -->
+                <!-- Side column -->
                 <div class="column is-one-third" th:if="${carStereo.galleryImages != null && !carStereo.galleryImages.isEmpty()}">
                     <div class="box">
+                        <!-- Gallery -->
                         <div th:replace="~{fragment/gallery :: gallery(${carStereo.galleryImages}, ${carStereo.name})}"></div>
+
+                        <!-- Pricing Info -->
+                        <div class="content block" th:if="${carStereo.pricingInfos != null && !carStereo.pricingInfos.isEmpty()}">
+                            <h3 class="is-size-5">Pricing Info</h3>
+                            <div th:each="info : ${carStereo.pricingInfos}" class="block">
+                                <div th:replace="~{fragment/pricingInfo :: pricingInfo(${info})}"></div>
+                            </div>
+                        </div>
+
+                        <!-- Resources -->
+                        <div class="content block" th:if="${carStereo.resources != null && !carStereo.resources.isEmpty()}">
+                            <h3 class="is-size-5">Resources</h3>
+                            <div th:each="resource : ${carStereo.resources}">
+                                <a th:href="${resource.link}" target="_blank">
+                                    <span class="icon"><i th:class="${resource.icon}"></i></span>
+                                    <span th:text="${resource.name}"></span>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -44,13 +64,6 @@
                                 </tr>
                             </tbody>
                         </table>
-
-                        <div class="content" th:if="${carStereo.pricingInfos != null && !carStereo.pricingInfos.isEmpty()}">
-                            <h3 class="is-size-5">Pricing Info</h3>
-                            <div th:each="info : ${carStereo.pricingInfos}" class="block">
-                                <div th:replace="~{fragment/pricingInfo :: pricingInfo(${info})}"></div>
-                            </div>
-                        </div>
 
                         <div class="content">
                             <h3 class="is-size-5">Description</h3>

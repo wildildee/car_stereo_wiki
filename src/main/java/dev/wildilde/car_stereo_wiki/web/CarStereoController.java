@@ -2,8 +2,8 @@ package dev.wildilde.car_stereo_wiki.web;
 
 import dev.wildilde.car_stereo_wiki.entity.GalleryImage;
 import dev.wildilde.car_stereo_wiki.entity.CarStereo;
+import dev.wildilde.car_stereo_wiki.entity.Resource;
 import dev.wildilde.car_stereo_wiki.repository.CarStereoRepository;
-import dev.wildilde.car_stereo_wiki.repository.GalleryImageRepository;
 import dev.wildilde.car_stereo_wiki.repository.TagRepository;
 import dev.wildilde.car_stereo_wiki.service.PricingService;
 import org.springframework.security.core.Authentication;
@@ -36,7 +36,7 @@ public class CarStereoController {
         // Get the car stereo by name
         CarStereo carStereo = carStereoRepository.findCarStereoByName(name);
         if(carStereo == null) {
-            return "redirect:/";
+            throw new ResourceNotFoundException("Car stereo not found: " + name);
         }
 
         // Ensure pricing info exists and is up to date
@@ -55,7 +55,7 @@ public class CarStereoController {
     String editCarStereo(@PathVariable String name, Model model) {
         CarStereo carStereo = carStereoRepository.findCarStereoByName(name);
         if(carStereo == null) {
-            return "redirect:/";
+            throw new ResourceNotFoundException("Car stereo not found: " + name);
         }
 
         // Ensure pricing info exists and is up to date
@@ -75,10 +75,13 @@ public class CarStereoController {
                          @RequestParam(value = "sizes", required = false) List<Long> sizeIds,
                          @RequestParam(value = "displays", required = false) List<Long> displayIds,
                          @RequestParam(value = "inputs", required = false) List<Long> inputIds,
-                         @RequestParam(value = "galleryImageUrls", required = false) List<String> galleryImageUrls) {
+                         @RequestParam(value = "galleryImageUrls", required = false) List<String> galleryImageUrls,
+                         @RequestParam(value = "resourceIcon", required = false) List<String> resourceIcons,
+                         @RequestParam(value = "resourceName", required = false) List<String> resourceNames,
+                         @RequestParam(value = "resourceLink", required = false) List<String> resourceLinks) {
         CarStereo existing = carStereoRepository.findCarStereoByName(name);
         if(existing == null) {
-            return "redirect:/";
+            throw new ResourceNotFoundException("Car stereo not found: " + name);
         }
         
         existing.setName(carStereo.getName());
@@ -119,6 +122,20 @@ public class CarStereoController {
         } else {
             existing.getGalleryImages().clear();
         }
+
+        if (resourceIcons != null && resourceNames != null && resourceLinks != null) {
+            existing.getResources().clear();
+            for (int i = 0; i < resourceIcons.size(); i++) {
+                String icon = resourceIcons.get(i);
+                String rName = resourceNames.get(i);
+                String link = resourceLinks.get(i);
+                if (rName != null && !rName.trim().isEmpty() && link != null && !link.trim().isEmpty()) {
+                    existing.getResources().add(new Resource(existing, icon, rName, link));
+                }
+            }
+        } else {
+            existing.getResources().clear();
+        }
         
         carStereoRepository.save(existing);
         return "redirect:/carStereo/" + existing.getName();
@@ -140,7 +157,10 @@ public class CarStereoController {
                            @RequestParam(value = "sizes", required = false) List<Long> sizeIds,
                            @RequestParam(value = "displays", required = false) List<Long> displayIds,
                            @RequestParam(value = "inputs", required = false) List<Long> inputIds,
-                           @RequestParam(value = "galleryImageUrls", required = false) List<String> galleryImageUrls) {
+                           @RequestParam(value = "galleryImageUrls", required = false) List<String> galleryImageUrls,
+                           @RequestParam(value = "resourceIcon", required = false) List<String> resourceIcons,
+                           @RequestParam(value = "resourceName", required = false) List<String> resourceNames,
+                           @RequestParam(value = "resourceLink", required = false) List<String> resourceLinks) {
         if (brandIds != null) {
             carStereo.setBrands(tagRepository.findAllById(brandIds));
         } else {
@@ -171,6 +191,19 @@ public class CarStereoController {
             }
         }
         carStereo.setGalleryImages(galleryImages);
+
+        List<dev.wildilde.car_stereo_wiki.entity.Resource> resources = new ArrayList<>();
+        if (resourceIcons != null && resourceNames != null && resourceLinks != null) {
+            for (int i = 0; i < resourceIcons.size(); i++) {
+                String icon = resourceIcons.get(i);
+                String rName = resourceNames.get(i);
+                String link = resourceLinks.get(i);
+                if (rName != null && !rName.trim().isEmpty() && link != null && !link.trim().isEmpty()) {
+                    resources.add(new dev.wildilde.car_stereo_wiki.entity.Resource(carStereo, icon, rName, link));
+                }
+            }
+        }
+        carStereo.setResources(resources);
 
         carStereoRepository.save(carStereo);
 

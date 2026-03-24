@@ -3,6 +3,7 @@ package dev.wildilde.car_stereo_wiki.entity;
 import jakarta.persistence.*;
 
 import java.time.Instant;
+import java.util.Comparator;
 import java.util.List;
 
 @Table(name = "pricing_info")
@@ -65,6 +66,11 @@ public class PricingInfo {
     }
 
     public List<PricingItem> getPrices() {
+        // Sort by price
+        if (prices != null) {
+            prices.sort(Comparator.comparing(PricingItem::getPrice));
+        }
+
         return prices;
     }
 

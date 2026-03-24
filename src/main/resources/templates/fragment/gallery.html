@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <body>
 <!--/*@thymesVar id="galleryImages" type="java.util.List"*/-->
-    <div th:fragment="gallery(galleryImages, altText)">
+    <div th:fragment="gallery(galleryImages, altText)" class="block">
 
         <!-- Gallery Big Image -->
         <div class="block">
@@ -24,7 +24,7 @@
 
         <!-- Gallery Thumbnails -->
         <div class="block">
-            <div class="grid is-col-min-2">
+            <div class="grid is-col-min-3">
                 <div class="cell" th:each="galleryImage : ${galleryImages}">
                     <figure class="image is-square">
                         <img th:class="${'gallery-thumbnail' + (galleryImages.indexOf(galleryImage) == 0 ? ' is-focused' : '')}"

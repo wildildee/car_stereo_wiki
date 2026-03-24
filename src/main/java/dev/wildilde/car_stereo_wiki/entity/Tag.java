@@ -14,7 +14,6 @@ public class Tag {
     private String name;
     private String type;
     private String description;
-    private String color;
 
     public Tag() {
     }
@@ -49,13 +48,5 @@ public class Tag {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
     }
 }

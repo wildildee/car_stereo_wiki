@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{template :: head('404 Not Found - Car Stereo Wiki')}">
+    <title>404 Not Found - Car Stereo Wiki</title>
+</head>
+<body>
+<header th:replace="~{template :: header}"></header>
+<section class="section">
+    <div class="container">
+        <div class="notification is-warning">
+            <h1 class="title">404 - Page Not Found</h1>
+            <p>The page you are looking for does not exist or has been moved.</p>
+            <br>
+            <a href="/" class="button is-light">Go back home</a>
+        </div>
+    </div>
+</section>
+<footer th:replace="~{template :: footer}"></footer>
+</body>
+</html>
