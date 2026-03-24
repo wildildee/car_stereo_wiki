@@ -7,23 +7,129 @@
     <header th:replace="~{template :: header}"></header>
     <section class="section">
         <div class="container">
+            <!-- Search section -->
             <div class="level">
                 <div class="level-left">
-                    <div>
-                        <h1 class="title">Search Results</h1>
-                        <h2 class="subtitle" th:if="${(query != null && !query.isEmpty()) || (brand != null && !brand.isEmpty()) || (year != null && !year.isEmpty()) || (size != null && !size.isEmpty()) || (display != null && !display.isEmpty()) || (input != null && !input.isEmpty())}">
-                            Searching for:
-                            <span th:if="${query != null && !query.isEmpty()}" th:text="'Name Contains: ' + ${query} + ' '"></span>
-                            <span th:if="${brand != null && !brand.isEmpty()}" th:text="'Brand: ' + ${brand} + ' '"></span>
-                            <span th:if="${year != null && !year.isEmpty()}" th:text="'Year: ' + ${year} + ' '"></span>
-                            <span th:if="${size != null && !size.isEmpty()}" th:text="'Size: ' + ${size} + ' '"></span>
-                            <span th:if="${display != null && !display.isEmpty()}" th:text="'Display: ' + ${display} + ' '"></span>
-                            <span th:if="${input != null && !input.isEmpty()}" th:text="'Input: ' + ${input} + ' '"></span>
-                        </h2>
+                    <h1 class="title">Search</h1>
+                </div>
+            </div>
+            <!-- Search filters -->
+            <form id="searchForm" th:action="@{/search}" method="get">
+                <input type="hidden" name="query" th:value="${query}">
+                <input type="hidden" name="sortBy" id="sortBy" th:value="${sortBy}">
+                <input type="hidden" name="sortDir" id="sortDir" th:value="${sortDir}">
+                <div class="columns is-multiline">
+                    <div class="column is-one-fifth">
+                        <div class="field">
+                            <div class="is-flex is-justify-content-space-between is-align-items-center">
+                                <label class="label">Brands</label>
+                                <button type="button" class="button is-small is-text" onclick="resetSelect(this)">Reset</button>
+                            </div>
+                            <div class="control">
+                                <div class="select is-multiple is-fullwidth custom-select">
+                                    <select name="brand" multiple size="5">
+                                        <option th:each="b : ${allBrands}" th:value="${b.name}" th:text="${b.name}" th:selected="${brands != null && brands.contains(b.name)}">Brand</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column is-one-fifth">
+                        <div class="field">
+                            <div class="is-flex is-justify-content-space-between is-align-items-center">
+                                <label class="label">Years</label>
+                                <button type="button" class="button is-small is-text" onclick="resetSelect(this)">Reset</button>
+                            </div>
+                            <div class="control">
+                                <div class="select is-multiple is-fullwidth">
+                                    <select name="year" multiple size="5">
+                                        <option th:each="y : ${allYears}" th:value="${y}" th:text="${y}" th:selected="${years != null && years.contains(y)}">Year</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column is-one-fifth">
+                        <div class="field">
+                            <div class="is-flex is-justify-content-space-between is-align-items-center">
+                                <label class="label">Sizes</label>
+                                <button type="button" class="button is-small is-text" onclick="resetSelect(this)">Reset</button>
+                            </div>
+                            <div class="control">
+                                <div class="select is-multiple is-fullwidth">
+                                    <select name="size" multiple size="5">
+                                        <option th:each="s : ${allSizes}" th:value="${s.name}" th:text="${s.name}" th:selected="${sizes != null && sizes.contains(s.name)}">Size</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column is-one-fifth">
+                        <div class="field">
+                            <div class="is-flex is-justify-content-space-between is-align-items-center">
+                                <label class="label">Displays</label>
+                                <button type="button" class="button is-small is-text" onclick="resetSelect(this)">Reset</button>
+                            </div>
+                            <div class="control">
+                                <div class="select is-multiple is-fullwidth">
+                                    <select name="display" multiple size="5">
+                                        <option th:each="d : ${allDisplays}" th:value="${d.name}" th:text="${d.name}" th:selected="${displays != null && displays.contains(d.name)}">Display</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column is-one-fifth">
+                        <div class="field">
+                            <div class="is-flex is-justify-content-space-between is-align-items-center">
+                                <label class="label">Inputs</label>
+                                <button type="button" class="button is-small is-text" onclick="resetSelect(this)">Reset</button>
+                            </div>
+                            <div class="control">
+                                <div class="select is-multiple is-fullwidth">
+                                    <select name="input" multiple size="5">
+                                        <option th:each="i : ${allInputs}" th:value="${i.name}" th:text="${i.name}" th:selected="${inputs != null && inputs.contains(i.name)}">Input</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        <button class="button is-primary" type="submit">Filter</button>
+                    </div>
+                </div>
+            </form>
+            <!-- Search results section -->
+            <div class="level">
+                <div class="level-left">
+                    <p class="is-size-5">Search Results <b th:text="${pagedCarStereos.pageable.pageNumber * pagedCarStereos.pageable.pageSize + 1} + '-' + ${pagedCarStereos.pageable.pageNumber * pagedCarStereos.pageable.pageSize + pagedCarStereos.pageable.pageSize}">1-20</b> of (<span th:text="${pagedCarStereos.totalElements}"></span>)</p>
+                </div>
+                <div class="level-right">
+                    <div class="dropdown" id="sortDropdown">
+                        <div class="dropdown-trigger">
+                            <button type="button" class="button" aria-haspopup="true" aria-controls="dropdown-menu" onclick="document.getElementById('sortDropdown').classList.toggle('is-active')">
+                                <span th:text="'Sort by: ' + ${#strings.capitalize(sortBy)}">Sort by</span>
+                                <span class="icon is-small">
+                                    <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                </span>
+                            </button>
+                        </div>
+                        <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                            <div class="dropdown-content">
+                                <a href="#" class="dropdown-item" th:classappend="${sortBy == 'name'} ? 'is-active'" onclick="setSort('name')">Name</a>
+                                <a href="#" class="dropdown-item" th:classappend="${sortBy == 'year'} ? 'is-active'" onclick="setSort('year')">Year</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Car Stereo List -->
             <div th:replace="~{fragment/carStereoList :: carStereoList(${pagedCarStereos})}"></div>
+
+            <script th:src="@{/js/search.js}"></script>
         </div>
     </section>
     <footer th:replace="~{template :: footer}"></footer>
