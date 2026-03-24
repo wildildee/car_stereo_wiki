@@ -17,7 +17,7 @@
                         <div th:replace="~{fragment/gallery :: gallery(${carStereo.galleryImages}, ${carStereo.name})}"></div>
 
                         <!-- Pricing Info -->
-                        <div class="block" th:if="${carStereo.pricingInfos != null && !carStereo.pricingInfos.isEmpty()}">
+                        <div class="content block" th:if="${carStereo.pricingInfos != null && !carStereo.pricingInfos.isEmpty()}">
                             <h3 class="is-size-5">Pricing Info</h3>
                             <div th:each="info : ${carStereo.pricingInfos}" class="block">
                                 <div th:replace="~{fragment/pricingInfo :: pricingInfo(${info})}"></div>
@@ -25,11 +25,11 @@
                         </div>
 
                         <!-- Resources -->
-                        <div class="block" th:if="${carStereo.resources != null && !carStereo.resources.isEmpty()}">
+                        <div class="content block" th:if="${carStereo.resources != null && !carStereo.resources.isEmpty()}">
                             <h3 class="is-size-5">Resources</h3>
-                            <div th:each="resource : ${carStereo.resources}" class="block">
+                            <div th:each="resource : ${carStereo.resources}">
                                 <a th:href="${resource.link}" target="_blank">
-                                    <span class="icon"><i th:class="'fas ' + ${resource.icon}"></i></span>
+                                    <span class="icon"><i th:class="${resource.icon}"></i></span>
                                     <span th:text="${resource.name}"></span>
                                 </a>
                             </div>

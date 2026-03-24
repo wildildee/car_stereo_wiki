@@ -8,9 +8,18 @@ public class Resource {
     @Id
     private long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "car_stereo_id", referencedColumnName = "id")
     private CarStereo carStereo;
+    
+    public Resource() {}
+
+    public Resource(CarStereo carStereo, String icon, String name, String link) {
+        this.carStereo = carStereo;
+        this.icon = icon;
+        this.name = name;
+        this.link = link;
+    }
 
     private String name;
     private String icon;

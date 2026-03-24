@@ -117,11 +117,6 @@ public class PricingService {
         if ("ebay".equals(info.getWebsite())) {
             fetchEbayPrices(info);
         }
-
-        // Sort prices by price
-        if (info.getPrices() != null) {
-            info.getPrices().sort(Comparator.comparing(PricingItem::getPrice));
-        }
         
         // Update timestamp and save info
         info.setLastUpdated(Instant.now());
