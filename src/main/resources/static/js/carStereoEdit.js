@@ -9,11 +9,74 @@ $(() => {
                     <input class="input" type="text" name="galleryImageUrls" value="" placeholder="https://example.com/image.jpg">
                 </div>
                 <div class="control">
+                    <div class="file is-info">
+                        <label class="file-label">
+                            <input class="file-input upload-image" type="file" name="imageFile" accept="image/*">
+                            <span class="file-cta">
+                                <span class="file-icon">
+                                    <i class="fas fa-upload"></i>
+                                </span>
+                                <span class="file-label">Upload</span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+                <div class="control">
                     <button type="button" class="button is-danger remove-image">Remove</button>
                 </div>
             </div>
         `);
         galleryContainer.append(newInput);
+    });
+
+    galleryContainer.on('change', '.upload-image', (e) => {
+        const fileInput = e.target;
+        if (fileInput.files.length === 0) return;
+
+        const file = fileInput.files[0];
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const csrfToken = $("meta[name='_csrf']").attr("content");
+        const csrfHeader = $("meta[name='_csrf_header']").attr("content");
+
+        const control = $(fileInput).closest('.control');
+        const inputField = control.closest('.field').find('input[name="galleryImageUrls"]');
+        const uploadBtn = control.find('.file-cta');
+        const originalText = uploadBtn.find('.file-label').text();
+
+        uploadBtn.find('.file-label').text('Uploading...');
+        fileInput.disabled = true;
+
+        $.ajax({
+            url: '/api/upload',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            beforeSend: (xhr) => {
+                if (csrfHeader && csrfToken) {
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                }
+            },
+            success: (data) => {
+                inputField.val(data.url);
+                uploadBtn.find('.file-label').text('Success!');
+                setTimeout(() => {
+                    uploadBtn.find('.file-label').text(originalText);
+                    fileInput.disabled = false;
+                }, 2000);
+            },
+            error: (err) => {
+                console.error('Upload failed:', err);
+                alert('Upload failed: ' + (err.responseJSON ? err.responseJSON.error : 'Unknown error'));
+                uploadBtn.find('.file-label').text('Failed');
+                setTimeout(() => {
+                    uploadBtn.find('.file-label').text(originalText);
+                    fileInput.disabled = false;
+                }, 2000);
+            }
+        });
     });
 
     galleryContainer.on('click', '.remove-image', (e) => {
