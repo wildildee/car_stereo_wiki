@@ -207,9 +207,6 @@ public class CarStereoController {
 
         carStereoRepository.save(carStereo);
 
-        // Ensure at least one pricing info exists
-        pricingService.createInitialPricingInfo(carStereo);
-
         return "redirect:/carStereo/" + carStereo.getName();
     }
 }

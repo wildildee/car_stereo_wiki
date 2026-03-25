@@ -227,15 +227,4 @@ public class PricingService {
         }
         return null;
     }
-    
-    @Transactional
-    public void createInitialPricingInfo(CarStereo carStereo) {
-        for (String website : PRICING_WEBSITES) {
-            PricingInfo pricingInfo = new PricingInfo();
-            pricingInfo.setCarStereo(carStereo);
-            pricingInfo.setWebsite(website);
-            pricingInfo.setLastUpdated(Instant.now());
-            pricingInfoRepository.save(pricingInfo);
-        }
-    }
 }
