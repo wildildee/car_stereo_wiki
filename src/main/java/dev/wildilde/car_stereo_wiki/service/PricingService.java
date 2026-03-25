@@ -153,7 +153,7 @@ public class PricingService {
 
             // eBay Browse API: search for sold items
             String url = "https://api.ebay.com/buy/browse/v1/item_summary/search?q=" + query + EBAY_TITLE_FILTER +
-                         "&filter=conditions:%7BUSED%7D,price:[" + info.getMinPrice() + "..],priceCurrency:" + EBAY_PRICE_CURRENCY +
+                         "&filter=conditions:%7BUSED%7D,price:[" + info.getCarStereo().getMinPrice() + "..],priceCurrency:" + EBAY_PRICE_CURRENCY +
                          "&sort=price" +
                          "&limit=" + EBAY_PRICES_LIMIT;
 
@@ -257,7 +257,7 @@ public class PricingService {
                 log.info("Exchange rate JPY to {}: {}", EBAY_PRICE_CURRENCY, jpyToTargetRate);
             }
 
-            int minPriceJpy = Math.round(info.getMinPrice() / jpyToTargetRate);
+            int minPriceJpy = Math.round(info.getCarStereo().getMinPrice() / jpyToTargetRate);
             String query = info.getCarStereo().getName().replace(" ", "+");
             String url = "https://auctions.yahoo.co.jp/closedsearch/closedsearch?p=" + query + "+-ジャンク&price_type=currentprice&min=" + minPriceJpy;
 
