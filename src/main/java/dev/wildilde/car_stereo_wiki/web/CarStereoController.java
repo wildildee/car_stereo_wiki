@@ -192,14 +192,14 @@ public class CarStereoController {
         }
         carStereo.setGalleryImages(galleryImages);
 
-        List<dev.wildilde.car_stereo_wiki.entity.Resource> resources = new ArrayList<>();
+        List<Resource> resources = new ArrayList<>();
         if (resourceIcons != null && resourceNames != null && resourceLinks != null) {
             for (int i = 0; i < resourceIcons.size(); i++) {
                 String icon = resourceIcons.get(i);
                 String rName = resourceNames.get(i);
                 String link = resourceLinks.get(i);
                 if (rName != null && !rName.trim().isEmpty() && link != null && !link.trim().isEmpty()) {
-                    resources.add(new dev.wildilde.car_stereo_wiki.entity.Resource(carStereo, icon, rName, link));
+                    resources.add(new Resource(carStereo, icon, rName, link));
                 }
             }
         }
