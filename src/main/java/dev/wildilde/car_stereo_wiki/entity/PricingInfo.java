@@ -17,9 +17,6 @@ public class PricingInfo {
     private CarStereo carStereo;
     private String website;
 
-    // Filters
-    private int minPrice = 20;
-
     private Instant lastUpdated;
     @OneToMany(mappedBy = "pricingInfo")
     @OrderBy("price ASC")
@@ -47,14 +44,6 @@ public class PricingInfo {
 
     public void setWebsite(String website) {
         this.website = website;
-    }
-
-    public int getMinPrice() {
-        return minPrice;
-    }
-
-    public void setMinPrice(int minPrice) {
-        this.minPrice = minPrice;
     }
 
     public Instant getLastUpdated() {
