@@ -6,6 +6,10 @@ import dev.wildilde.car_stereo_wiki.entity.PricingItem;
 import dev.wildilde.car_stereo_wiki.repository.CarStereoRepository;
 import dev.wildilde.car_stereo_wiki.repository.PricingInfoRepository;
 import dev.wildilde.car_stereo_wiki.repository.PricingItemRepository;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,8 +29,9 @@ import java.util.*;
 public class PricingService {
     private static final Logger log = LoggerFactory.getLogger(PricingService.class);
     private static final Duration UPDATE_INTERVAL = Duration.ofDays(1); // 1 day TODO: Make configurable via enviroment variable
-    private static final List<String> PRICING_WEBSITES = List.of("ebay"); // TODO: Make configurable via enviroment variable
+    private static final List<String> PRICING_WEBSITES = List.of("ebay", "yahoo"); // TODO: Make configurable via enviroment variable
     private static final int EBAY_PRICES_LIMIT = 8; // TODO: Make configurable via enviroment variable
+    private static final int YAHOO_PRICES_LIMIT = 8;
     private static final String EBAY_TITLE_FILTER = " -\"face plate\" -faceplate -\"parts only\"";
     @Value("${ebay.api.currency}")
     private static final String EBAY_PRICE_CURRENCY = "CAD";
@@ -70,6 +75,9 @@ public class PricingService {
             if (!existingWebsites.contains(website)) {
                 PricingInfo pricingInfo = new PricingInfo();
                 pricingInfo.setCarStereo(carStereo);
+                if (carStereo.getPricingInfos() == null) {
+                    carStereo.setPricingInfos(new ArrayList<>());
+                }
                 carStereo.getPricingInfos().add(pricingInfo);
                 pricingInfo.setWebsite(website);
                 pricingInfo.setLastUpdated(Instant.now().minus(7, ChronoUnit.DAYS));
@@ -85,7 +93,8 @@ public class PricingService {
         }
 
         boolean updated = false;
-        for (PricingInfo info : pricingInfos) {
+        // Copy list to avoid ConcurrentModificationException if Hibernate flushes/modifies it
+        for (PricingInfo info : new ArrayList<>(pricingInfos)) {
             if (shouldUpdate(info)) {
                 updatePricingInfo(info);
                 updated = true;
@@ -114,8 +123,14 @@ public class PricingService {
         }
 
 
-        if ("ebay".equals(info.getWebsite())) {
-            fetchEbayPrices(info);
+        switch (info.getWebsite()) {
+            case "ebay":
+                fetchEbayPrices(info);
+                break;
+            case "yahoo":
+                fetchYahooPrices(info);
+                break;
+            default:
         }
         
         // Update timestamp and save info
@@ -190,6 +205,9 @@ public class PricingService {
                         pricingItemRepository.save(pricingItem);
                         info.getPrices().add(pricingItem);
                     }
+                    
+                    // Sort in memory after adding all items
+                    info.getPrices().sort(Comparator.comparing(PricingItem::getPrice));
                 } else {
                     // Something went wrong, log it
                     System.err.println("No item summaries found in eBay response");
@@ -227,4 +245,99 @@ public class PricingService {
         }
         return null;
     }
+
+    private void fetchYahooPrices(PricingInfo info) {
+        try {
+            if (loggingEnabled) {
+                log.info("Fetching Yahoo Auctions prices for: {}", info.getCarStereo().getName());
+            }
+
+            float jpyToTargetRate = getJpyExchangeRate(EBAY_PRICE_CURRENCY);
+            if (loggingEnabled) {
+                log.info("Exchange rate JPY to {}: {}", EBAY_PRICE_CURRENCY, jpyToTargetRate);
+            }
+
+            int minPriceJpy = Math.round(info.getMinPrice() / jpyToTargetRate);
+            String query = info.getCarStereo().getName().replace(" ", "+");
+            String url = "https://auctions.yahoo.co.jp/closedsearch/closedsearch?p=" + query + "+-ジャンク&price_type=currentprice&min=" + minPriceJpy;
+
+            Document doc = Jsoup.connect(url)
+                    .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36")
+                    .get();
+
+            Elements items = doc.select("li.sc-93f00b27-2.iDpbCh");
+            if (loggingEnabled) {
+                log.info("Found {} item(s) from Yahoo Auctions", items.size());
+            }
+
+            // Clear old prices
+            if (info.getPrices() != null) {
+                pricingItemRepository.deleteAll(info.getPrices());
+                info.getPrices().clear();
+            } else {
+                info.setPrices(new ArrayList<>());
+            }
+
+            int count = 0;
+            for (Element item : items) {
+                if (count >= YAHOO_PRICES_LIMIT) break;
+
+                PricingItem pricingItem = new PricingItem();
+                pricingItem.setPricingInfo(info);
+
+                // Price
+                Element priceElement = item.selectFirst(".sc-eeafbf50-16.jqxDNt");
+                if (priceElement != null) {
+                    String priceText = priceElement.text().replaceAll("[^0-9]", "");
+                    if (!priceText.isEmpty()) {
+                        float priceInJpy = Float.parseFloat(priceText);
+                        pricingItem.setPrice(priceInJpy * jpyToTargetRate);
+                    }
+                }
+
+                // Link
+                Element linkElement = item.selectFirst("a");
+                if (linkElement != null) {
+                    pricingItem.setLink(linkElement.attr("abs:href"));
+                }
+
+                // Image
+                Element imgElement = item.selectFirst("img");
+                if (imgElement != null) {
+                    pricingItem.setImage(imgElement.attr("src").split("\\?")[0]);
+                }
+
+                pricingItemRepository.save(pricingItem);
+                info.getPrices().add(pricingItem);
+                count++;
+            }
+            
+            // Sort in memory after adding all items
+            info.getPrices().sort(Comparator.comparing(PricingItem::getPrice));
+        } catch (Exception e) {
+            log.error("Error fetching Yahoo Auctions prices: {}", e.getMessage());
+        }
+    }
+    private float getJpyExchangeRate(String targetCurrency) {
+        try {
+            String url = "https://api.exchangerate-api.com/v4/latest/JPY";
+            ResponseEntity<Map> response = restTemplate.getForEntity(url, Map.class);
+            if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+                Map<String, Object> rates = (Map<String, Object>) response.getBody().get("rates");
+                if (rates != null && rates.containsKey(targetCurrency)) {
+                    Object rate = rates.get(targetCurrency);
+                    if (rate instanceof Number) {
+                        return ((Number) rate).floatValue();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            log.error("Error fetching exchange rate: {}", e.getMessage());
+        }
+        // Fallback or default rate if API fails (approximate JPY to CAD)
+        if ("CAD".equals(targetCurrency)) return 0.0087f;
+        if ("USD".equals(targetCurrency)) return 0.0063f;
+        return 1.0f;
+    }
+
 }
