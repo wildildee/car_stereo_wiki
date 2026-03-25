@@ -86,6 +86,7 @@ public class CarStereoController {
         
         existing.setName(carStereo.getName());
         existing.setYear(carStereo.getYear());
+        existing.setMinPrice(carStereo.getMinPrice());
         existing.setDescription(carStereo.getDescription());
         
         if (brandIds != null) {

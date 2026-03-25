@@ -24,6 +24,13 @@
             </div>
 
             <div class="field">
+                <label class="label">Min Price</label>
+                <div class="control">
+                    <input class="input" type="number" th:field="*{minPrice}" required>
+                </div>
+            </div>
+
+            <div class="field">
                 <label class="label">Gallery Images</label>
                 <div class="block" id="gallery-inputs">
                     <div class="field has-addons" th:each="image : ${carStereo.galleryImages}">
