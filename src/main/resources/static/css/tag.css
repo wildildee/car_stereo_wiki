@@ -43,15 +43,25 @@
 .tag[data-tag="Fold"] { background-color: HSL(300deg, var(--tag-saturation), var(--tag-lightness)); }
 
 /* Inputs */
-.tag[data-tag="FM/AM"] { background-color: HSL(0deg, var(--tag-saturation), var(--tag-lightness)); }
-.tag[data-tag="CD"] { background-color: HSL(30deg, var(--tag-saturation), var(--tag-lightness)); }
-.tag[data-tag="MD"] { background-color: HSL(210deg, var(--tag-saturation), var(--tag-lightness)); }
-.tag[data-tag="MD Changer"] { background-color: HSL(210deg, var(--tag-saturation), var(--tag-lightness)); }
-.tag[data-tag="DVD"] { background-color: HSL(60deg, var(--tag-saturation), var(--tag-lightness)); }
-.tag[data-tag="BT"] { background-color: HSL(120deg, var(--tag-saturation), var(--tag-lightness)); }
-.tag[data-tag="SiriusXM"] { background-color: HSL(120deg, var(--tag-saturation), var(--tag-lightness)); }
-.tag[data-tag="Ai-NET"] { background-color: HSL(300deg, var(--tag-saturation), var(--tag-lightness)); }
-.tag[data-tag="FullSpeed"] { background-color: HSL(300deg, var(--tag-saturation), var(--tag-lightness)); }
-.tag[data-tag="AUX"] { background-color: HSL(240deg, var(--tag-saturation), var(--tag-lightness)); }
-.tag[data-tag="USB"] { background-color: HSL(240deg, var(--tag-saturation), var(--tag-lightness)); }
-.tag[data-tag="HDD"] { background-color: HSL(180deg, var(--tag-saturation), var(--tag-lightness)); }
+.tag[data-tag="FM/AM"]
+{ background-color: HSL(0deg, var(--tag-saturation), var(--tag-lightness)); }
+.tag[data-tag="CD"],
+.tag[data-tag="CD Changer"]
+{ background-color: HSL(30deg, var(--tag-saturation), var(--tag-lightness)); }
+.tag[data-tag="MD"],
+.tag[data-tag="MD Changer"]
+{ background-color: HSL(210deg, var(--tag-saturation), var(--tag-lightness)); }
+.tag[data-tag="DVD"]
+{ background-color: HSL(60deg, var(--tag-saturation), var(--tag-lightness)); }
+.tag[data-tag="BT"]
+{ background-color: HSL(120deg, var(--tag-saturation), var(--tag-lightness)); }
+.tag[data-tag="SiriusXM"]
+{ background-color: HSL(120deg, var(--tag-saturation), var(--tag-lightness)); }
+.tag[data-tag="Ai-NET"],
+.tag[data-tag="FullSpeed"]
+{ background-color: HSL(300deg, var(--tag-saturation), var(--tag-lightness)); }
+.tag[data-tag="AUX"],
+.tag[data-tag="USB"]
+{ background-color: HSL(240deg, var(--tag-saturation), var(--tag-lightness)); }
+.tag[data-tag="HDD"]
+{ background-color: HSL(180deg, var(--tag-saturation), var(--tag-lightness)); }

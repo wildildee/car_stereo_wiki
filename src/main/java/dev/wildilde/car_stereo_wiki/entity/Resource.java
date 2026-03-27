@@ -11,18 +11,22 @@ public class Resource {
     @ManyToOne
     @JoinColumn(name = "car_stereo_id", referencedColumnName = "id")
     private CarStereo carStereo;
-    
+    public static final java.util.Map<String, String> TYPES = java.util.Map.of(
+            "pdf", "fas fa-file-pdf",
+            "link", "fas fa-link"
+    );
+
     public Resource() {}
 
-    public Resource(CarStereo carStereo, String icon, String name, String link) {
+    public Resource(CarStereo carStereo, String type, String name, String link) {
         this.carStereo = carStereo;
-        this.icon = icon;
+        this.type = type;
         this.name = name;
         this.link = link;
     }
 
     private String name;
-    private String icon;
+    private String type;
     private String link;
 
     public long getId() {
@@ -49,12 +53,16 @@ public class Resource {
         this.name = name;
     }
 
-    public String getIcon() {
-        return icon;
+    public String getType() {
+        return type;
     }
 
-    public void setIcon(String icon) {
-        this.icon = icon;
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getIcon() {
+        return TYPES.getOrDefault(type != null ? type.toLowerCase() : "", "fas fa-question-circle");
     }
 
     public String getLink() {

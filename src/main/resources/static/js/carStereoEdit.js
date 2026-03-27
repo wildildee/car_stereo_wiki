@@ -89,11 +89,29 @@ $(() => {
     const resourceContainer = $('#resource-inputs');
     const addResourceBtn = $('#add-resource');
 
+    function getResourceTypes() {
+        const types = [];
+        $('.resource-type-item').each(function() {
+            types.push($(this).text());
+        });
+        return types;
+    }
+
     addResourceBtn.on('click', () => {
+        const types = getResourceTypes();
+        let optionsHtml = '';
+        types.forEach(type => {
+            optionsHtml += `<option value="${type}">${type.toUpperCase()}</option>`;
+        });
+
         const newInput = $(`
             <div class="field has-addons">
                 <div class="control">
-                    <input class="input" type="text" name="resourceIcon" placeholder="fas fa-file-pdf">
+                    <div class="select">
+                        <select name="resourceType" class="resource-type-select">
+                            ${optionsHtml}
+                        </select>
+                    </div>
                 </div>
                 <div class="control is-expanded">
                     <input class="input" type="text" name="resourceName" placeholder=".pdf">
@@ -101,12 +119,86 @@ $(() => {
                 <div class="control is-expanded">
                     <input class="input" type="text" name="resourceLink" placeholder="https://example.com/resource.pdf">
                 </div>
+                <div class="control resource-upload-control">
+                    <div class="file is-info">
+                        <label class="file-label">
+                            <input class="file-input upload-resource" type="file" name="resourceFile">
+                            <span class="file-cta">
+                                <span class="file-icon">
+                                    <i class="fas fa-upload"></i>
+                                </span>
+                                <span class="file-label">Upload</span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
                 <div class="control">
                     <button type="button" class="button is-danger remove-resource">Remove</button>
                 </div>
             </div>
         `);
         resourceContainer.append(newInput);
+    });
+
+    resourceContainer.on('change', '.resource-type-select', (e) => {
+        const select = $(e.target);
+        const row = select.closest('.field');
+        const uploadControl = row.find('.resource-upload-control');
+        if (select.val() === 'link') {
+            uploadControl.hide();
+        } else {
+            uploadControl.show();
+        }
+    });
+
+    resourceContainer.on('change', '.upload-resource', (e) => {
+        const fileInput = e.target;
+        if (fileInput.files.length === 0) return;
+
+        const file = fileInput.files[0];
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const csrfToken = $("meta[name='_csrf']").attr("content");
+        const csrfHeader = $("meta[name='_csrf_header']").attr("content");
+
+        const row = $(fileInput).closest('.field');
+        const inputField = row.find('input[name="resourceLink"]');
+        const uploadBtn = row.find('.file-cta');
+        const originalText = uploadBtn.find('.file-label').text();
+
+        uploadBtn.find('.file-label').text('Uploading...');
+        fileInput.disabled = true;
+
+        $.ajax({
+            url: '/api/upload',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            beforeSend: (xhr) => {
+                if (csrfHeader && csrfToken) {
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                }
+            },
+            success: (data) => {
+                inputField.val(data.url);
+                uploadBtn.find('.file-label').text('Success!');
+                setTimeout(() => {
+                    uploadBtn.find('.file-label').text(originalText);
+                    fileInput.disabled = false;
+                }, 2000);
+            },
+            error: (err) => {
+                console.error('Upload failed:', err);
+                alert('Upload failed: ' + (err.responseJSON ? err.responseJSON.error : 'Unknown error'));
+                uploadBtn.find('.file-label').text('Failed');
+                setTimeout(() => {
+                    uploadBtn.find('.file-label').text(originalText);
+                    fileInput.disabled = false;
+                }, 2000);
+            }
+        });
     });
 
     resourceContainer.on('click', '.remove-resource', (e) => {
