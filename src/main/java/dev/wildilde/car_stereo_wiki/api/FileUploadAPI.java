@@ -21,9 +21,9 @@ public class FileUploadAPI {
     }
 
     @PostMapping("/api/upload")
-    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam(value = "tag", required = false) String tag) {
         try {
-            String url = fileService.uploadFile(file);
+            String url = fileService.uploadFile(file, tag);
             return ResponseEntity.ok(Map.of("url", url));
         } catch (IOException e) {
             return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));

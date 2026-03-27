@@ -12,6 +12,7 @@ import org.springframework.web.client.RestClient;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 public class ChibisafeFileService implements FileService {
@@ -29,7 +30,7 @@ public class ChibisafeFileService implements FileService {
         this.restClient = restClientBuilder.baseUrl(apiUrl).build();
     }
 
-    public String uploadFile(MultipartFile file) throws IOException {
+    public String uploadFile(MultipartFile file, String tag) throws IOException {
         HttpHeaders fileHeaders = new HttpHeaders();
         fileHeaders.setContentType(MediaType.parseMediaType(file.getContentType()));
         fileHeaders.setContentDispositionFormData("files[]", file.getOriginalFilename());
@@ -49,10 +50,77 @@ public class ChibisafeFileService implements FileService {
         System.out.println(response);
 
         if (response != null && response.getUrl() != null && !response.getUrl().isEmpty()) {
+            // Apply native tag if tag is provided
+            if (tag != null && !tag.trim().isEmpty() && response.getUuid() != null) {
+                applyTag(response.getUuid(), tag);
+            }
             return response.getUrl();
         }
 
         throw new IOException("Failed to upload file to Chibisafe: " + (response != null ? response : "Unknown error"));
+    }
+
+    private void applyTag(String fileUuid, String tagName) {
+        try {
+            ChibisafeTagsResponse tagsResponse = restClient.get()
+                    .uri("/api/tags")
+                    .header("x-api-key", apiKey)
+                    .retrieve()
+                    .body(ChibisafeTagsResponse.class);
+
+            if (tagsResponse != null && tagsResponse.getTags() != null) {
+                String tagUuid = tagsResponse.getTags().stream()
+                        .filter(t -> tagName.equalsIgnoreCase(t.getName()))
+                        .map(ChibisafeTag::getUuid)
+                        .findFirst()
+                        .orElse(null);
+
+                if (tagUuid != null) {
+                    restClient.post()
+                            .uri("/api/file/{uuid}/tag/{tagUuid}", fileUuid, tagUuid)
+                            .header("x-api-key", apiKey)
+                            .retrieve()
+                            .toBodilessEntity();
+                } else {
+                    System.out.println("[DEBUG_LOG] Tag not found: " + tagName);
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Failed to apply tag " + tagName + " to file " + fileUuid + ": " + e.getMessage());
+        }
+    }
+
+    public static class ChibisafeTagsResponse {
+        private List<ChibisafeTag> tags;
+
+        public List<ChibisafeTag> getTags() {
+            return tags;
+        }
+
+        public void setTags(List<ChibisafeTag> tags) {
+            this.tags = tags;
+        }
+    }
+
+    public static class ChibisafeTag {
+        private String uuid;
+        private String name;
+
+        public String getUuid() {
+            return uuid;
+        }
+
+        public void setUuid(String uuid) {
+            this.uuid = uuid;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
     }
 
     public static class ChibisafeUploadResponse {
