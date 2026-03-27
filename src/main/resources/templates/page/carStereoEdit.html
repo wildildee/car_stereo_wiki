@@ -86,7 +86,14 @@
                 <div class="block" id="resource-inputs">
                     <div class="field has-addons" th:each="resource : ${carStereo.resources}">
                         <div class="control">
-                            <input class="input" type="text" name="resourceIcon" th:value="${resource.icon}" placeholder="fas fa-file-pdf">
+                            <div class="select">
+                                <select name="resourceType" class="resource-type-select">
+                                    <option th:each="type : ${resourceTypes}"
+                                            th:value="${type}"
+                                            th:text="${type.toUpperCase()}"
+                                            th:selected="${resource.type == type}"></option>
+                                </select>
+                            </div>
                         </div>
                         <div class="control is-expanded">
                             <input class="input" type="text" name="resourceName" th:value="${resource.name}" placeholder=".pdf">
@@ -94,19 +101,51 @@
                         <div class="control is-expanded">
                             <input class="input" type="text" name="resourceLink" th:value="${resource.link}" placeholder="https://example.com/resource.pdf">
                         </div>
+                        <div class="control resource-upload-control" th:style="${resource.type == 'link' ? 'display: none;' : ''}">
+                            <div class="file is-info">
+                                <label class="file-label">
+                                    <input class="file-input upload-resource" type="file" name="resourceFile">
+                                    <span class="file-cta">
+                                        <span class="file-icon">
+                                            <i class="fas fa-upload"></i>
+                                        </span>
+                                        <span class="file-label">Upload</span>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
                         <div class="control">
                             <button type="button" class="button is-danger remove-resource">Remove</button>
                         </div>
                     </div>
                     <div class="field has-addons" th:if="${carStereo.resources == null || carStereo.resources.isEmpty()}">
                         <div class="control">
-                            <input class="input" type="text" name="resourceIcon" placeholder="fas fa-file-pdf">
+                            <div class="select">
+                                <select name="resourceType" class="resource-type-select">
+                                    <option th:each="type : ${resourceTypes}"
+                                            th:value="${type}"
+                                            th:text="${type.toUpperCase()}"></option>
+                                </select>
+                            </div>
                         </div>
                         <div class="control is-expanded">
                             <input class="input" type="text" name="resourceName" placeholder=".pdf">
                         </div>
                         <div class="control is-expanded">
                             <input class="input" type="text" name="resourceLink" placeholder="https://example.com/resource.pdf">
+                        </div>
+                        <div class="control resource-upload-control">
+                            <div class="file is-info">
+                                <label class="file-label">
+                                    <input class="file-input upload-resource" type="file" name="resourceFile">
+                                    <span class="file-cta">
+                                        <span class="file-icon">
+                                            <i class="fas fa-upload"></i>
+                                        </span>
+                                        <span class="file-label">Upload</span>
+                                    </span>
+                                </label>
+                            </div>
                         </div>
                         <div class="control">
                             <button type="button" class="button is-danger remove-resource">Remove</button>
@@ -221,6 +260,9 @@
         </form>
     </div>
 </section>
+<div id="resource-types-data" style="display: none;">
+    <span th:each="type : ${resourceTypes}" th:text="${type}" class="resource-type-item"></span>
+</div>
 <footer th:replace="~{template :: footer}"></footer>
 </body>
 </html>

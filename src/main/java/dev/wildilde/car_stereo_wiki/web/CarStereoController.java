@@ -66,6 +66,7 @@ public class CarStereoController {
         model.addAttribute("allSizes", tagRepository.findAllByType("size"));
         model.addAttribute("allDisplays", tagRepository.findAllByType("display"));
         model.addAttribute("allInputs", tagRepository.findAllByType("input"));
+        model.addAttribute("resourceTypes", Resource.TYPES.keySet());
         return "page/carStereoEdit";
     }
 
@@ -76,7 +77,7 @@ public class CarStereoController {
                          @RequestParam(value = "displays", required = false) List<Long> displayIds,
                          @RequestParam(value = "inputs", required = false) List<Long> inputIds,
                          @RequestParam(value = "galleryImageUrls", required = false) List<String> galleryImageUrls,
-                         @RequestParam(value = "resourceIcon", required = false) List<String> resourceIcons,
+                         @RequestParam(value = "resourceType", required = false) List<String> resourceTypes,
                          @RequestParam(value = "resourceName", required = false) List<String> resourceNames,
                          @RequestParam(value = "resourceLink", required = false) List<String> resourceLinks) {
         CarStereo existing = carStereoRepository.findCarStereoByName(name);
@@ -124,14 +125,14 @@ public class CarStereoController {
             existing.getGalleryImages().clear();
         }
 
-        if (resourceIcons != null && resourceNames != null && resourceLinks != null) {
+        if (resourceTypes != null && resourceNames != null && resourceLinks != null) {
             existing.getResources().clear();
-            for (int i = 0; i < resourceIcons.size(); i++) {
-                String icon = resourceIcons.get(i);
+            for (int i = 0; i < resourceTypes.size(); i++) {
+                String type = resourceTypes.get(i);
                 String rName = resourceNames.get(i);
                 String link = resourceLinks.get(i);
                 if (rName != null && !rName.trim().isEmpty() && link != null && !link.trim().isEmpty()) {
-                    existing.getResources().add(new Resource(existing, icon, rName, link));
+                    existing.getResources().add(new Resource(existing, type, rName, link));
                 }
             }
         } else {
@@ -149,6 +150,7 @@ public class CarStereoController {
         model.addAttribute("allSizes", tagRepository.findAllByType("size"));
         model.addAttribute("allDisplays", tagRepository.findAllByType("display"));
         model.addAttribute("allInputs", tagRepository.findAllByType("input"));
+        model.addAttribute("resourceTypes", Resource.TYPES.keySet());
         return "page/carStereoEdit";
     }
 
@@ -159,7 +161,7 @@ public class CarStereoController {
                            @RequestParam(value = "displays", required = false) List<Long> displayIds,
                            @RequestParam(value = "inputs", required = false) List<Long> inputIds,
                            @RequestParam(value = "galleryImageUrls", required = false) List<String> galleryImageUrls,
-                           @RequestParam(value = "resourceIcon", required = false) List<String> resourceIcons,
+                           @RequestParam(value = "resourceType", required = false) List<String> resourceTypes,
                            @RequestParam(value = "resourceName", required = false) List<String> resourceNames,
                            @RequestParam(value = "resourceLink", required = false) List<String> resourceLinks) {
         if (brandIds != null) {
@@ -194,13 +196,13 @@ public class CarStereoController {
         carStereo.setGalleryImages(galleryImages);
 
         List<Resource> resources = new ArrayList<>();
-        if (resourceIcons != null && resourceNames != null && resourceLinks != null) {
-            for (int i = 0; i < resourceIcons.size(); i++) {
-                String icon = resourceIcons.get(i);
+        if (resourceTypes != null && resourceNames != null && resourceLinks != null) {
+            for (int i = 0; i < resourceTypes.size(); i++) {
+                String type = resourceTypes.get(i);
                 String rName = resourceNames.get(i);
                 String link = resourceLinks.get(i);
                 if (rName != null && !rName.trim().isEmpty() && link != null && !link.trim().isEmpty()) {
-                    resources.add(new Resource(carStereo, icon, rName, link));
+                    resources.add(new Resource(carStereo, type, rName, link));
                 }
             }
         }

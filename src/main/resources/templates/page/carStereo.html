@@ -29,7 +29,7 @@
                             <h3 class="is-size-5">Resources</h3>
                             <div th:each="resource : ${carStereo.resources}">
                                 <a th:href="${resource.link}" target="_blank">
-                                    <span class="icon"><i th:class="${resource.icon}"></i></span>
+                                    <span class="icon"><i th:class="${resource.getIcon()}"></i></span>
                                     <span th:text="${resource.name}"></span>
                                 </a>
                             </div>
