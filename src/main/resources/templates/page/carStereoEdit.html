@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{template :: head(${carStereo.id == 0 ? 'Add New Car Stereo' : 'Edit ' + carStereo.name} + ' - Car Stereo Wiki')}">
+<head th:replace="~{template :: head(${carStereo.id == 0 ? 'Add New Car Stereo' : 'Edit ' + carStereo.name} + ' - Car Stereo Wiki', null, null)}">
     <title th:text="${carStereo.id == 0 ? 'Add New Car Stereo' : 'Edit ' + carStereo.name} + ' - Car Stereo Wiki'">Edit Car Stereo</title>
 </head>
 <body>
