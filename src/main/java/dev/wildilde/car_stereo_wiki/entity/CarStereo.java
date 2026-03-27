@@ -20,6 +20,9 @@ public class CarStereo {
     @Column(length = MAX_DESCRIPTION_LENGTH)
     private String description;
 
+    // Filters
+    private int minPrice = 20;
+
     @ManyToMany
     @JoinTable(name = "car_stereo_brand_tag")
     private List<Tag> brands;
@@ -128,5 +131,13 @@ public class CarStereo {
 
     public void setResources(List<Resource> resources) {
         this.resources = resources;
+    }
+
+    public int getMinPrice() {
+        return minPrice;
+    }
+
+    public void setMinPrice(int minPrice) {
+        this.minPrice = minPrice;
     }
 }
