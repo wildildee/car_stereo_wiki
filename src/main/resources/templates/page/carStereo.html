@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{template :: head(
     pageTitle=${carStereo.name} + ' - Car Stereo Wiki', 
-    description=${carStereo.description}, 
+    description=${#strings.listJoin(carStereo.getAllTagNames(), ' | ')},
     image=${(carStereo.galleryImages != null && !carStereo.galleryImages.isEmpty()) ? carStereo.galleryImages[0].imageURL : null}
 )}">
     <title th:text="${carStereo.name} + ' - Car Stereo Wiki'">Car Stereo Details</title>
