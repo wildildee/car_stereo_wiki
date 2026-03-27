@@ -81,6 +81,19 @@ public class CarStereo {
         return inputs;
     }
 
+    public List<Tag> getAllTags() {
+        List<Tag> allTags = new java.util.ArrayList<>();
+        if (brands != null) allTags.addAll(brands);
+        if (sizes != null) allTags.addAll(sizes);
+        if (displays != null) allTags.addAll(displays);
+        if (inputs != null) allTags.addAll(inputs);
+        return allTags;
+    }
+
+    public List<String> getAllTagNames() {
+        return getAllTags().stream().map(Tag::getName).toList();
+    }
+
     public void setInputs(List<Tag> inputs) {
         this.inputs = inputs;
     }
