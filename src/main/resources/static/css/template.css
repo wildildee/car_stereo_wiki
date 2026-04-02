@@ -20,3 +20,7 @@ body {
 .navbar-item img {
     filter: brightness(0) invert(1);
 }
+
+.pagination-previous[disabled], .pagination-next[disabled] {
+    pointer-events: none;
+}
