@@ -2,6 +2,8 @@ package dev.wildilde.car_stereo_wiki.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "car_stereo_comment")
@@ -14,7 +16,10 @@ public class CarStereoComment {
     @Column(length = 2000)
     private String text;
 
-    private String photoUrl;
+    @ElementCollection
+    @CollectionTable(name = "car_stereo_comment_photo", joinColumns = @JoinColumn(name = "comment_id"))
+    @Column(name = "photo_url")
+    private List<String> photoUrls = new ArrayList<>();
 
     private LocalDateTime createdAt;
 
@@ -30,10 +35,10 @@ public class CarStereoComment {
         this.createdAt = LocalDateTime.now();
     }
 
-    public CarStereoComment(String text, String photoUrl, CarStereo carStereo, User user) {
+    public CarStereoComment(String text, List<String> photoUrls, CarStereo carStereo, User user) {
         this();
         this.text = text;
-        this.photoUrl = photoUrl;
+        this.photoUrls = photoUrls != null ? photoUrls : new ArrayList<>();
         this.carStereo = carStereo;
         this.user = user;
     }
@@ -54,12 +59,12 @@ public class CarStereoComment {
         this.text = text;
     }
 
-    public String getPhotoUrl() {
-        return photoUrl;
+    public List<String> getPhotoUrls() {
+        return photoUrls;
     }
 
-    public void setPhotoUrl(String photoUrl) {
-        this.photoUrl = photoUrl;
+    public void setPhotoUrls(List<String> photoUrls) {
+        this.photoUrls = photoUrls;
     }
 
     public LocalDateTime getCreatedAt() {

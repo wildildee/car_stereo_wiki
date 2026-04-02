@@ -2,7 +2,6 @@ package dev.wildilde.car_stereo_wiki.api;
 
 import dev.wildilde.car_stereo_wiki.service.FileService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,9 +20,9 @@ public class FileUploadAPI {
     }
 
     @PostMapping("/api/upload")
-    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam(value = "tag", required = false) String tag) {
+    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam(value = "albumName", required = false) String albumName) {
         try {
-            String url = fileService.uploadFile(file, tag);
+            String url = fileService.uploadFile(file, albumName);
             return ResponseEntity.ok(Map.of("url", url));
         } catch (IOException e) {
             return ResponseEntity.status(500).body(Map.of("error", e.getMessage()));

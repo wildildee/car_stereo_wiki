@@ -18,6 +18,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Controller
@@ -41,15 +44,15 @@ public class CommentController {
     @PostMapping("/carStereo/{id}/comment")
     public String addComment(@RequestParam("id") Long carStereoId,
                              @RequestParam("text") String text,
-                             @RequestParam(value = "photo", required = false) MultipartFile photo,
+                             @RequestParam(value = "photo", required = false) MultipartFile[] photos,
                              Authentication authentication,
                              RedirectAttributes redirectAttributes) {
-        if (authentication == null || !authentication.isAuthenticated()) {
+        if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal() == null) {
             return "redirect:/login";
         }
 
         OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
-        String userId = oauth2User.getAttribute("id").toString();
+        String userId = Objects.requireNonNull(oauth2User.getAttribute("id")).toString();
 
         Optional<CarStereo> carStereoOpt = carStereoRepository.findById(carStereoId);
         if (carStereoOpt.isEmpty()) {
@@ -62,17 +65,22 @@ public class CommentController {
             return "redirect:/";
         }
 
-        String photoUrl = null;
-        if (photo != null && !photo.isEmpty()) {
-            try {
-                photoUrl = fileService.uploadFile(photo, "comment");
-            } catch (IOException e) {
-                redirectAttributes.addFlashAttribute("error", "Failed to upload photo: " + e.getMessage());
-                return "redirect:/carStereo/" + carStereoOpt.get().getName();
+        List<String> photoUrls = new ArrayList<>();
+        if (photos != null) {
+            for (MultipartFile photo : photos) {
+                if (!photo.isEmpty()) {
+                    try {
+                        String photoUrl = fileService.uploadFile(photo, "comment");
+                        photoUrls.add(photoUrl);
+                    } catch (IOException e) {
+                        redirectAttributes.addFlashAttribute("error", "Failed to upload photo: " + e.getMessage());
+                        return "redirect:/carStereo/" + carStereoOpt.get().getName();
+                    }
+                }
             }
         }
 
-        CarStereoComment comment = new CarStereoComment(text, photoUrl, carStereoOpt.get(), userOpt.get());
+        CarStereoComment comment = new CarStereoComment(text, photoUrls, carStereoOpt.get(), userOpt.get());
         commentRepository.save(comment);
 
         redirectAttributes.addFlashAttribute("message", "Comment submitted for review!");
@@ -83,7 +91,7 @@ public class CommentController {
     public String deleteComment(@PathVariable Long commentId,
                                 Authentication authentication,
                                 RedirectAttributes redirectAttributes) {
-        if (authentication == null || !authentication.isAuthenticated()) {
+        if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal() == null) {
             return "redirect:/";
         }
 
@@ -94,7 +102,7 @@ public class CommentController {
 
         CarStereoComment comment = commentOpt.get();
         OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
-        String userId = oauth2User.getAttribute("id").toString();
+        String userId = Objects.requireNonNull(oauth2User.getAttribute("id")).toString();
         boolean isAdmin = authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"));
 
         if (comment.getUser().getId().equals(userId) || isAdmin) {

@@ -96,10 +96,10 @@
                                         <span class="is-size-7" th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
                                     </div>
                                     <p class="mt-2" th:text="${comment.text}"></p>
-                                    <div th:if="${comment.photoUrl != null}" class="mt-2">
-                                        <figure class="image is-128x128">
-                                            <a th:href="${comment.photoUrl}" target="_blank">
-                                                <img th:src="${comment.photoUrl}" alt="Comment photo">
+                                    <div th:if="${not #lists.isEmpty(comment.photoUrls)}" class="mt-2 is-flex is-flex-wrap-wrap" style="gap: 0.5rem;">
+                                        <figure th:each="photoUrl : ${comment.photoUrls}" class="image is-128x128">
+                                            <a th:href="${photoUrl}" target="_blank">
+                                                <img th:src="${photoUrl}" alt="Comment photo" style="object-fit: cover; height: 100%;">
                                             </a>
                                         </figure>
                                     </div>
@@ -115,18 +115,20 @@
                                 <form th:action="@{/carStereo/{id}/comment(id=${carStereo.id})}" method="post" enctype="multipart/form-data">
                                     <input type="hidden" name="id" th:value="${carStereo.id}">
                                     <div class="field">
-                                        <div class="control">
+                                        <label class="control">
                                             <textarea class="textarea" name="text" placeholder="Your suggestion or comment..." required maxlength="2000"></textarea>
-                                        </div>
+                                        </label>
                                     </div>
                                     <div class="field">
-                                        <label class="label is-size-7">Upload a photo (optional)</label>
-                                        <div class="file has-name is-small">
+                                        <label class="label is-size-7">Upload photos (optional, multiple allowed)</label>
+                                        <div class="file has-name is-small is-fullwidth">
                                             <label class="file-label">
-                                                <input class="file-input" type="file" name="photo" accept="image/*" onchange="this.parentElement.querySelector('.file-name').textContent = this.files[0].name">
+                                                <input class="file-input" type="file" name="photo" accept="image/*" multiple
+                                                       onchange="const nameSpan = this.parentElement.querySelector('.file-name'); 
+                                                                 nameSpan.textContent = this.files.length > 0 ? this.files.length + ' file(s) selected' : 'No file selected'">
                                                 <span class="file-cta">
                                                     <span class="file-icon"><i class="fas fa-upload"></i></span>
-                                                    <span class="file-label">Choose a file…</span>
+                                                    <span class="file-label">Choose files…</span>
                                                 </span>
                                                 <span class="file-name">No file selected</span>
                                             </label>
