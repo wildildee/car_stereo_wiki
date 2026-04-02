@@ -73,6 +73,76 @@
                             <h3 class="is-size-5">Description</h3>
                             <p style="white-space: pre-wrap;" th:text="${carStereo.description}"></p>
                         </div>
+
+                        <hr>
+
+                        <!-- Comments Section -->
+                        <div class="content">
+                            <h3 class="is-size-5">Comments & Suggestions</h3>
+                            <p class="is-size-7 has-text-grey">Comments are only visible to you and administrators for review.</p>
+
+                            <!-- Display existing comments -->
+                            <div th:if="${not #lists.isEmpty(comments)}">
+                                <div th:each="comment : ${comments}" class="box mb-3">
+                                    <div class="is-flex is-justify-content-space-between">
+                                        <div class="is-flex is-align-items-center">
+                                            <h4 class="mb-0 mr-3" th:text="${comment.user.name}"></h4>
+                                            <form th:if="${isAdmin || (isUserLoggedIn && comment.user.id == #authentication.principal.attributes['id'].toString())}"
+                                                  th:action="@{/comment/{id}/delete(id=${comment.id})}" method="post" class="is-inline">
+                                                <button type="submit" class="button is-danger is-small is-outlined" 
+                                                        onclick="return confirm('Are you sure you want to delete this comment?')">Delete</button>
+                                            </form>
+                                        </div>
+                                        <span class="is-size-7" th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
+                                    </div>
+                                    <p class="mt-2" th:text="${comment.text}"></p>
+                                    <div th:if="${not #lists.isEmpty(comment.photoUrls)}" class="mt-2 is-flex is-flex-wrap-wrap" style="gap: 0.5rem;">
+                                        <figure th:each="photoUrl : ${comment.photoUrls}" class="image is-128x128">
+                                            <a th:href="${photoUrl}" target="_blank">
+                                                <img th:src="${photoUrl}" alt="Comment photo" style="object-fit: cover; height: 100%;">
+                                            </a>
+                                        </figure>
+                                    </div>
+                                </div>
+                            </div>
+                            <div th:if="${#lists.isEmpty(comments) && isUserLoggedIn}" class="has-text-grey is-italic">
+                                <p>No comments yet.</p>
+                            </div>
+
+                            <!-- Comment form -->
+                            <div th:if="${isUserLoggedIn}" class="mt-5">
+                                <h4 class="is-size-6 has-text-weight-semibold">Leave a comment or suggestion</h4>
+                                <form th:action="@{/carStereo/{id}/comment(id=${carStereo.id})}" method="post" enctype="multipart/form-data">
+                                    <input type="hidden" name="id" th:value="${carStereo.id}">
+                                    <div class="field">
+                                        <label class="control">
+                                            <textarea class="textarea" name="text" placeholder="Your suggestion or comment..." required maxlength="2000"></textarea>
+                                        </label>
+                                    </div>
+                                    <div class="field">
+                                        <label class="label is-size-7">Upload photos (optional, multiple allowed)</label>
+                                        <div class="file has-name is-small is-fullwidth">
+                                            <label class="file-label">
+                                                <input class="file-input" type="file" name="photo" accept="image/*" multiple
+                                                       onchange="const nameSpan = this.parentElement.querySelector('.file-name'); 
+                                                                 nameSpan.textContent = this.files.length > 0 ? this.files.length + ' file(s) selected' : 'No file selected'">
+                                                <span class="file-cta">
+                                                    <span class="file-icon"><i class="fas fa-upload"></i></span>
+                                                    <span class="file-label">Choose files…</span>
+                                                </span>
+                                                <span class="file-name">No file selected</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="control">
+                                        <button type="submit" class="button is-primary is-small">Submit</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div th:unless="${isUserLoggedIn}" class="mt-5 notification is-light">
+                                <p>Please <a th:href="@{/oauth2/authorization/github}">login</a> to leave a comment or suggestion.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

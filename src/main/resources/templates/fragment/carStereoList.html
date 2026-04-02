@@ -42,13 +42,13 @@
             </p>
 
             <nav class="pagination is-centered" role="navigation" aria-label="pagination" th:if="${pagedCarStereos != null}">
-                <a class="pagination-previous" th:href="@{/(page=${pagedCarStereos.number - 1})}" th:disabled="${pagedCarStereos.first}">&laquo; Previous</a>
-                <a class="pagination-next" th:href="@{/(page=${pagedCarStereos.number + 1})}" th:disabled="${pagedCarStereos.last}">Next &raquo;</a>
+                <a class="pagination-previous" th:href="@{/search(page=${pagedCarStereos.number - 1}, query=${param.query}, brand=${param.brand}, year=${param.year}, size=${param.size}, display=${param.display}, input=${param.input}, sortBy=${param.sortBy}, sortDir=${param.sortDir})}" th:disabled="${pagedCarStereos.first}">&laquo; Previous</a>
+                <a class="pagination-next" th:href="@{/search(page=${pagedCarStereos.number + 1}, query=${param.query}, brand=${param.brand}, year=${param.year}, size=${param.size}, display=${param.display}, input=${param.input}, sortBy=${param.sortBy}, sortDir=${param.sortDir})}" th:disabled="${pagedCarStereos.last}">Next &raquo;</a>
                 <ul class="pagination-list">
                     <li th:each="i : ${#numbers.sequence(0, pagedCarStereos.totalPages - 1)}">
                         <a class="pagination-link"
                            th:classappend="${i == pagedCarStereos.number} ? 'is-current'"
-                           th:href="@{/(page=${i})}" th:text="${i + 1}"
+                           th:href="@{/search(page=${i}, query=${param.query}, brand=${param.brand}, year=${param.year}, size=${param.size}, display=${param.display}, input=${param.input}, sortBy=${param.sortBy}, sortDir=${param.sortDir})}" th:text="${i + 1}"
                            th:aria-label="'Goto page ' + ${i + 1}"></a>
                     </li>
                 </ul>

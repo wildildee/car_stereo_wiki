@@ -6,6 +6,7 @@
       <div class="navbar-brand">
           <!-- Left side logo + website name-->
           <a class="navbar-item" href="/">
+              <img th:src="@{/icon.svg}" alt="Logo" class="image is-32x32 mr-3">
               <strong>Car Stereo Wiki</strong>
           </a>
 
@@ -24,9 +25,9 @@
               <div class="navbar-item">
                   <form action="/search" method="get">
                       <div class="field has-addons">
-                          <div class="control">
-                              <input class="input" type="text" name="query" placeholder="Search by name..." th:value="${query}">
-                          </div>
+                          <label class="control">
+                              <input class="input" type="text" name="query" placeholder="Search by name...">
+                          </label>
                           <div class="control">
                               <button type="submit" class="button is-info">
                                   Search

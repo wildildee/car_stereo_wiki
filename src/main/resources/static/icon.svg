@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <rect x="10" y="140" width="380" height="120" style="fill: none; stroke-width: 12; stroke-linejoin: round; stroke: currentcolor;"/>
+  <rect x="130.47" y="159.724" width="240.938" height="59.701" style="fill: none; stroke-width: 12; stroke-linejoin: round; stroke: currentcolor;"/>
+  <ellipse style="stroke-width: 12; fill: none; stroke: currentcolor;" cx="64.372" cy="198.636" rx="31.983" ry="31.983"/>
+  <line style="fill: none; stroke-width: 12; stroke-linecap: round; stroke-dasharray: 24.09, 19.27; stroke: currentcolor;" x1="130.519" y1="239.806" x2="371.419" y2="239.806"/>
+</svg>

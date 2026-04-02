@@ -17,6 +17,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Optional;
 
 import static org.springframework.security.config.Customizer.withDefaults;
@@ -25,15 +26,15 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class SecurityConfig {
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService) {
         return http
                 .authorizeHttpRequests(a -> a
-                        .requestMatchers("/", "/error", "/css/**", "/js/**", "/carStereo/{name}", "/api/user", "/search").permitAll()
+                        .requestMatchers("/", "/error", "/css/**", "/js/**", "/favicon.ico", "/favicon.svg", "/icon.svg", "/carStereo/{name}", "/api/user", "/search").permitAll()
                         .requestMatchers("/carStereo/add", "/carStereo/*/edit", "/api/tag/add", "/api/upload").hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated()
                 )
-                .logout(l -> l.
-                        logoutSuccessUrl("/").permitAll()
+                .logout(l -> l
+                        .logoutSuccessUrl("/").permitAll()
                 )
                 .csrf(withDefaults())
                 .oauth2Login(o -> o
@@ -48,17 +49,23 @@ public class SecurityConfig {
         DefaultOAuth2UserService delegate = new DefaultOAuth2UserService();
         return (userRequest) -> {
             OAuth2User oAuth2User = delegate.loadUser(userRequest);
-            String id = oAuth2User.getAttribute("id").toString();
+            String id = Objects.requireNonNull(oAuth2User.getAttribute("id")).toString();
+            String name = Objects.requireNonNull(oAuth2User.getAttribute("login")).toString();
 
             // If not in the database, create a new user
             Optional<User> userOpt = userRepository.findById(id);
             User user;
             if (userOpt.isEmpty()) {
                 // Always false (not admin), administrators are added manually
-                user = new User(id, false);
+                user = new User(id, name, false);
                 userRepository.save(user);
             } else {
                 user = userOpt.get();
+                // Update the name if it has changed
+                if (!name.equals(user.getName())) {
+                    user.setName(name);
+                    userRepository.save(user);
+                }
             }
 
             Collection<GrantedAuthority> authorities = new ArrayList<>(oAuth2User.getAuthorities());

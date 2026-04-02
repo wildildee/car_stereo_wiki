@@ -3,11 +3,14 @@ package dev.wildilde.car_stereo_wiki.web;
 import dev.wildilde.car_stereo_wiki.entity.GalleryImage;
 import dev.wildilde.car_stereo_wiki.entity.CarStereo;
 import dev.wildilde.car_stereo_wiki.entity.Resource;
+import dev.wildilde.car_stereo_wiki.entity.CarStereoComment;
+import dev.wildilde.car_stereo_wiki.repository.CarStereoCommentRepository;
 import dev.wildilde.car_stereo_wiki.repository.CarStereoRepository;
 import dev.wildilde.car_stereo_wiki.repository.TagRepository;
 import dev.wildilde.car_stereo_wiki.service.PricingService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,11 +27,13 @@ public class CarStereoController {
     private final CarStereoRepository carStereoRepository;
     private final TagRepository tagRepository;
     private final PricingService pricingService;
+    private final CarStereoCommentRepository commentRepository;
 
-    public CarStereoController(CarStereoRepository carStereoRepository, TagRepository tagRepository, PricingService pricingService) {
+    public CarStereoController(CarStereoRepository carStereoRepository, TagRepository tagRepository, PricingService pricingService, CarStereoCommentRepository commentRepository) {
         this.carStereoRepository = carStereoRepository;
         this.tagRepository = tagRepository;
         this.pricingService = pricingService;
+        this.commentRepository = commentRepository;
     }
 
     @GetMapping("/carStereo/{name}")
@@ -47,6 +52,20 @@ public class CarStereoController {
         
         boolean isAdmin = authentication != null && authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"));
         model.addAttribute("isAdmin", isAdmin);
+        boolean isUserLoggedIn = authentication != null && authentication.isAuthenticated();
+        model.addAttribute("isUserLoggedIn", isUserLoggedIn);
+
+        List<CarStereoComment> comments;
+        if (isAdmin) {
+            comments = commentRepository.findAllByCarStereoIdOrderByCreatedAtDesc(carStereo.getId());
+        } else if (isUserLoggedIn) {
+            OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
+            String userId = oauth2User.getAttribute("id").toString();
+            comments = commentRepository.findAllByCarStereoIdAndUserIdOrderByCreatedAtDesc(carStereo.getId(), userId);
+        } else {
+            comments = new ArrayList<>();
+        }
+        model.addAttribute("comments", comments);
         
         return "page/carStereo";
     }

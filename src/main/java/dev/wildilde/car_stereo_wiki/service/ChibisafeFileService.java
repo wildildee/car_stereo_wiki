@@ -13,11 +13,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ChibisafeFileService implements FileService {
 
-    private final String apiUrl;
     private final String apiKey;
     private final RestClient restClient;
 
@@ -25,14 +25,13 @@ public class ChibisafeFileService implements FileService {
             @Value("${chibisafe.api.url}") String apiUrl,
             @Value("${chibisafe.api.key}") String apiKey,
             RestClient.Builder restClientBuilder) {
-        this.apiUrl = apiUrl;
         this.apiKey = apiKey;
         this.restClient = restClientBuilder.baseUrl(apiUrl).build();
     }
 
-    public String uploadFile(MultipartFile file, String tag) throws IOException {
+    public String uploadFile(MultipartFile file, String albumName) throws IOException {
         HttpHeaders fileHeaders = new HttpHeaders();
-        fileHeaders.setContentType(MediaType.parseMediaType(file.getContentType()));
+        fileHeaders.setContentType(MediaType.parseMediaType(Objects.requireNonNull(file.getContentType())));
         fileHeaders.setContentDispositionFormData("files[]", file.getOriginalFilename());
         HttpEntity<Resource> filePart = new HttpEntity<>(file.getResource(), fileHeaders);
 
@@ -50,9 +49,9 @@ public class ChibisafeFileService implements FileService {
         System.out.println(response);
 
         if (response != null && response.getUrl() != null && !response.getUrl().isEmpty()) {
-            // Apply native tag if tag is provided
-            if (tag != null && !tag.trim().isEmpty() && response.getUuid() != null) {
-                applyTag(response.getUuid(), tag);
+            // Add to album if albumName is provided
+            if (albumName != null && !albumName.trim().isEmpty() && response.getUuid() != null) {
+                addToAlbum(response.getUuid(), albumName);
             }
             return response.getUrl();
         }
@@ -60,49 +59,49 @@ public class ChibisafeFileService implements FileService {
         throw new IOException("Failed to upload file to Chibisafe: " + (response != null ? response : "Unknown error"));
     }
 
-    private void applyTag(String fileUuid, String tagName) {
+    private void addToAlbum(String fileUuid, String albumName) {
         try {
-            ChibisafeTagsResponse tagsResponse = restClient.get()
-                    .uri("/api/tags")
+            ChibisafeAlbumsResponse albumsResponse = restClient.get()
+                    .uri("/api/albums")
                     .header("x-api-key", apiKey)
                     .retrieve()
-                    .body(ChibisafeTagsResponse.class);
+                    .body(ChibisafeAlbumsResponse.class);
 
-            if (tagsResponse != null && tagsResponse.getTags() != null) {
-                String tagUuid = tagsResponse.getTags().stream()
-                        .filter(t -> tagName.equalsIgnoreCase(t.getName()))
-                        .map(ChibisafeTag::getUuid)
+            if (albumsResponse != null && albumsResponse.getAlbums() != null) {
+                String albumUuid = albumsResponse.getAlbums().stream()
+                        .filter(a -> albumName.equalsIgnoreCase(a.getName()))
+                        .map(ChibisafeAlbum::getUuid)
                         .findFirst()
                         .orElse(null);
 
-                if (tagUuid != null) {
+                if (albumUuid != null) {
                     restClient.post()
-                            .uri("/api/file/{uuid}/tag/{tagUuid}", fileUuid, tagUuid)
+                            .uri("/api/file/{uuid}/album/{albumUuid}", fileUuid, albumUuid)
                             .header("x-api-key", apiKey)
                             .retrieve()
                             .toBodilessEntity();
                 } else {
-                    System.out.println("[DEBUG_LOG] Tag not found: " + tagName);
+                    System.err.println("Album with name '" + albumName + "' not found.");
                 }
             }
         } catch (Exception e) {
-            System.err.println("Failed to apply tag " + tagName + " to file " + fileUuid + ": " + e.getMessage());
+            System.err.println("Failed to add file " + fileUuid + " to album " + albumName + ": " + e.getMessage());
         }
     }
 
-    public static class ChibisafeTagsResponse {
-        private List<ChibisafeTag> tags;
+    public static class ChibisafeAlbumsResponse {
+        private List<ChibisafeAlbum> albums;
 
-        public List<ChibisafeTag> getTags() {
-            return tags;
+        public List<ChibisafeAlbum> getAlbums() {
+            return albums;
         }
 
-        public void setTags(List<ChibisafeTag> tags) {
-            this.tags = tags;
+        public void setAlbums(List<ChibisafeAlbum> albums) {
+            this.albums = albums;
         }
     }
 
-    public static class ChibisafeTag {
+    public static class ChibisafeAlbum {
         private String uuid;
         private String name;
 
