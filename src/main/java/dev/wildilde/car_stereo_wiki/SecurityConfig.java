@@ -49,16 +49,22 @@ public class SecurityConfig {
         return (userRequest) -> {
             OAuth2User oAuth2User = delegate.loadUser(userRequest);
             String id = oAuth2User.getAttribute("id").toString();
+            String name = oAuth2User.getAttribute("login").toString();
 
             // If not in the database, create a new user
             Optional<User> userOpt = userRepository.findById(id);
             User user;
             if (userOpt.isEmpty()) {
                 // Always false (not admin), administrators are added manually
-                user = new User(id, false);
+                user = new User(id, name, false);
                 userRepository.save(user);
             } else {
                 user = userOpt.get();
+                // Update the name if it has changed
+                if (!name.equals(user.getName())) {
+                    user.setName(name);
+                    userRepository.save(user);
+                }
             }
 
             Collection<GrantedAuthority> authorities = new ArrayList<>(oAuth2User.getAuthorities());

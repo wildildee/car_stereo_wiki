@@ -45,6 +45,9 @@ public class CarStereo {
     @OneToMany(mappedBy = "carStereo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Resource> resources;
 
+    @OneToMany(mappedBy = "carStereo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CarStereoComment> comments;
+
     public long getId() {
         return id;
     }
@@ -144,6 +147,14 @@ public class CarStereo {
 
     public void setResources(List<Resource> resources) {
         this.resources = resources;
+    }
+
+    public List<CarStereoComment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<CarStereoComment> comments) {
+        this.comments = comments;
     }
 
     public int getMinPrice() {
