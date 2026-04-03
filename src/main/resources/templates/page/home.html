@@ -6,13 +6,43 @@
 <body>
     <header th:replace="~{template :: header}"></header>
     <section class="section">
-        <div class="container">
-            <div class="level">
-                <div class="level-left">
-                    <h1 class="title">Recently Modified</h1>
+        <div class="columns">
+            <div class="column">
+                <div class="box content">
+                    <h1 class="title">Welcome to the Car Stereo Wiki!</h1>
+                    <p>
+                        Your ultimate resource for exploring, comparing, and discovering vintage car stereo models.
+                    </p>
+                    <div class="level is-mobile mt-4">
+                        <div class="level-item has-text-centered">
+                            <div>
+                                <p class="heading">Stereos</p>
+                                <p class="title is-4" th:text="${totalStereos}">0</p>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <h2 class="subtitle">Getting Started</h2>
+                    <ul>
+                        <li><strong>Search:</strong> Use the search bar in the header to find specific models or brands.</li>
+                        <li><strong>Filters:</strong> Browse our collection using filters for year, brand, size, and display type.</li>
+                        <li><strong>Comment:</strong> See something incorrect? Have photos of a specific stereo? Help us improve by leaving a comment!</li>
+                    </ul>
+                    <h2 class="subtitle">Information</h2>
+                    <p>
+                        Prices are listed in CAD with information from both current eBay listing and past (closed) Yahoo Auctions. These are included to give you an idea of the market value.
+                        These prices can be wrong as listings can be for "junk" or "for parts." Please verify by clicking on the listing to see more details.
+                    </p>
                 </div>
             </div>
-            <div th:replace="~{fragment/carStereoList :: carStereoList(${pagedCarStereos})}"></div>
+            <div class="column is-one-third">
+                <div class="level">
+                    <div class="level-left">
+                        <h1 class="title">Recently Modified</h1>
+                    </div>
+                </div>
+                <div th:replace="~{fragment/carStereoList :: carStereoList(${pagedCarStereos})}"></div>
+            </div>
         </div>
     </section>
     <footer th:replace="~{template :: footer}"></footer>
