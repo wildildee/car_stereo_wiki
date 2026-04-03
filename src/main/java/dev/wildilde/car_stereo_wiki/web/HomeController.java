@@ -24,8 +24,8 @@ public class HomeController {
 
     @GetMapping("/")
     String home(Model model, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "") String query, Authentication authentication) {
-        // Get all car stereos
-        Page<CarStereo> stereos = carStereoRepository.findAll(PageRequest.of(page, PAGE_SIZE));
+        // Get recently modified car stereos
+        Page<CarStereo> stereos = carStereoRepository.findAllByOrderByLastModifiedDesc(PageRequest.of(page, PAGE_SIZE));
         model.addAttribute("pagedCarStereos",stereos);
         model.addAttribute("query", query);
         

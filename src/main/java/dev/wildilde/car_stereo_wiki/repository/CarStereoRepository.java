@@ -35,6 +35,8 @@ public interface CarStereoRepository extends JpaRepository<CarStereo, Long> {
                            Pageable pageable);
 
     CarStereo findCarStereoByName(String name);
+    
+    Page<CarStereo> findAllByOrderByLastModifiedDesc(Pageable pageable);
 
     @Query("select min(cs.year) from CarStereo cs")
     int findLowestYear();

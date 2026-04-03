@@ -2,6 +2,7 @@ package dev.wildilde.car_stereo_wiki.entity;
 
 import jakarta.persistence.*;
 
+import java.time.Instant;
 import java.util.List;
 
 @Table(name = "car_stereo")
@@ -19,6 +20,7 @@ public class CarStereo {
     private int year;
     @Column(length = MAX_DESCRIPTION_LENGTH)
     private String description;
+    private Instant lastModified;
 
     // Filters
     private int minPrice = 20;
@@ -47,6 +49,13 @@ public class CarStereo {
 
     @OneToMany(mappedBy = "carStereo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CarStereoComment> comments;
+
+    @PrePersist
+    @PreUpdate
+    public void updateLastModified() {
+        setLastModified(Instant.now());
+    }
+
 
     public long getId() {
         return id;
@@ -163,5 +172,13 @@ public class CarStereo {
 
     public void setMinPrice(int minPrice) {
         this.minPrice = minPrice;
+    }
+
+    public Instant getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(Instant lastModified) {
+        this.lastModified = lastModified;
     }
 }
