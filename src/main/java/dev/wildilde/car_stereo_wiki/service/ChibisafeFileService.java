@@ -46,11 +46,11 @@ public class ChibisafeFileService implements FileService {
                 .retrieve()
                 .body(ChibisafeUploadResponse.class);
 
-        System.out.println(response);
-
         if (response != null && response.getUrl() != null && !response.getUrl().isEmpty()) {
             // Add to album if albumName is provided
+            System.out.println(albumName);
             if (albumName != null && !albumName.trim().isEmpty() && response.getUuid() != null) {
+
                 addToAlbum(response.getUuid(), albumName);
             }
             return response.getUrl();

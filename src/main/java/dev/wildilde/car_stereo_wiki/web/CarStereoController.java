@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 public class CarStereoController {
@@ -54,13 +55,16 @@ public class CarStereoController {
         model.addAttribute("isAdmin", isAdmin);
         boolean isUserLoggedIn = authentication != null && authentication.isAuthenticated();
         model.addAttribute("isUserLoggedIn", isUserLoggedIn);
+        if(isUserLoggedIn) {
+            model.addAttribute("currentUser", authentication.getName());
+        }
 
         List<CarStereoComment> comments;
         if (isAdmin) {
             comments = commentRepository.findAllByCarStereoIdOrderByCreatedAtDesc(carStereo.getId());
-        } else if (isUserLoggedIn) {
+        } else if (isUserLoggedIn && authentication.getPrincipal() != null) {
             OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
-            String userId = oauth2User.getAttribute("id").toString();
+            String userId = Objects.requireNonNull(oauth2User.getAttribute("id")).toString();
             comments = commentRepository.findAllByCarStereoIdAndUserIdOrderByCreatedAtDesc(carStereo.getId(), userId);
         } else {
             comments = new ArrayList<>();

@@ -20,7 +20,7 @@ public class FileUploadAPI {
     }
 
     @PostMapping("/api/upload")
-    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam(value = "albumName", required = false) String albumName) {
+    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam(value = "album", required = false) String albumName) {
         try {
             String url = fileService.uploadFile(file, albumName);
             return ResponseEntity.ok(Map.of("url", url));

@@ -36,7 +36,7 @@ $(() => {
         const file = fileInput.files[0];
         const formData = new FormData();
         formData.append('file', file);
-        formData.append('tag', 'image');
+        formData.append('album', 'image');
 
         const csrfToken = $("meta[name='_csrf']").attr("content");
         const csrfHeader = $("meta[name='_csrf_header']").attr("content");
@@ -157,14 +157,11 @@ $(() => {
         if (fileInput.files.length === 0) return;
 
         const row = $(fileInput).closest('.field');
-        const resourceType = row.find('.resource-type-select').val();
 
         const file = fileInput.files[0];
         const formData = new FormData();
         formData.append('file', file);
-        if (resourceType) {
-            formData.append('tag', resourceType);
-        }
+        formData.append('album', 'resource');
 
         const csrfToken = $("meta[name='_csrf']").attr("content");
         const csrfHeader = $("meta[name='_csrf_header']").attr("content");
